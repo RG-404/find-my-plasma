@@ -1,9 +1,10 @@
 import NavBar from './NavBar.js'
 
-const Layout = () => {
+const Layout = ({children}) => {
   return (
     <div>
       <NavBar/>
+      {children}
     </div>
   );
 };

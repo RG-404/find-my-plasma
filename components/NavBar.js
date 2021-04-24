@@ -48,7 +48,7 @@ const NavBar = () => {
             </div>
             {/* primary nav */}
             <div className="hidden md:flex items-center space-x-1">
-              <Link href="/listing/1">
+              <Link href="/listing">
                 <a className="py-4 px-3 text-gray-700 hover:text-gray-900">
                   Plasma Listing
                 </a>
@@ -65,15 +65,16 @@ const NavBar = () => {
 
           {/* secondary nav */}
           <div className="hidden md:flex items-center space-x-1">
-            <a href="#" className="py-4 px-3 text-gray-700">
-              Login
-            </a>
-            <a
-              href="#"
-              className="py-2 px-3 bg-yellow-400 text-yellow-900 rounded hover:bg-yellow-300 transition duration-100"
-            >
-              Register
-            </a>
+            <Link href="/myaccount">
+              <a href="#" className="py-4 px-3 text-gray-700">
+                My Account
+              </a>
+            </Link>
+            <Link href="/plasmarequest">
+              <a className="py-2 px-3 bg-yellow-400 text-yellow-900 rounded hover:bg-yellow-300 transition duration-100">
+                Make Request
+              </a>
+            </Link>
           </div>
           {/* mobile button */}
           <div className="md:hidden flex items-center">

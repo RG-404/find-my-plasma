@@ -39,13 +39,15 @@ const Pagination = ({ max, current }) => {
   return (
     <div className="flex">
       {current != 1 ? (
-        <div className="border w-10 h-10 text-center items-center flex justify-center bg-gray-100">
-          {"<"}
-        </div>
+        <Link href={`/listing?page=${current - 1}`}>
+          <div className="cursor-pointer border w-10 h-10 text-center items-center flex justify-center bg-gray-100">
+            {"<"}
+          </div>
+        </Link>
       ) : null}
       {indices.map((index, i) => {
         return (
-          <Link href={`/listing/${index}`}>
+          <Link href={`/listing?page=${index}`}>
             <div
               className={`cursor-pointer border w-10 h-10 text-center items-center flex justify-center ${
                 current == index ? "bg-gray-900 text-white" : "bg-gray-100"
@@ -58,9 +60,11 @@ const Pagination = ({ max, current }) => {
         );
       })}
       {current != max ? (
-        <div className="border w-10 h-10 text-center items-center flex justify-center bg-gray-100">
-          {">"}
-        </div>
+        <Link href={`/listing?page=${current + 1}`}>
+          <div className="cursor-pointer border w-10 h-10 text-center items-center flex justify-center bg-gray-100">
+            {">"}
+          </div>
+        </Link>
       ) : null}
     </div>
   );

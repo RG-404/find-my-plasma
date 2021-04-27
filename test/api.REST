@@ -1,0 +1,17 @@
+POST http://localhost:3000/api/test
+Content-Type: application/json
+
+{
+    "name" : {
+        "first" : "Rishparn",
+        "last" : "Gogoi"
+    },
+    "email" : "gogoi.rishparn@gmail.com",
+    "address" : {
+        "city" : "Jorhat",
+        "pin" : 7850007,
+        "state" : "Assam"
+    },
+    "blood" : "A+",
+    "phone" : 8811994019
+}

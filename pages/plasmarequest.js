@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Firebase from "../utils/firebase";
+import "firebase/auth";
 import axios from "axios";
-import Spinner from "../components/Spinner";
 import Toast from "../components/Toast";
 
 const plasmarequest = () => {
@@ -30,7 +30,11 @@ const plasmarequest = () => {
 
   const [toastId, setToastId] = useState("");
 
-  const [toastMessage, setToastMessage] = useState("");
+  const [toastMessage, setToastMessage] = useState({
+    text: "PLASMA REQUEST CREATED SUCCESSFULLY",
+    warn: false,
+  });
+
   const [submitMessage, setSubmitMessage] = useState("");
 
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -74,30 +78,52 @@ const plasmarequest = () => {
     setState(value);
   };
 
+  // form data validation
+  const validateForm = () => {
+    if (
+      !firstName ||
+      !lastName ||
+      !phoneNumber ||
+      !age ||
+      !bloodGroup ||
+      !(bloodGroupNeeded.length > 0) ||
+      !city ||
+      !stateName ||
+      !areaPincode
+    )
+      console.log("INCOMPLETE");
+    else {
+      console.log("COMPLETE");
+    }
+  };
+
   const handleSubmit = async (event) => {
-    setShowPhoneVerificationBlock(true);
-    setSubmitMessage("Verifying...");
-    setButtonLoading(true);
-    const recaptcha = new Firebase.auth.RecaptchaVerifier("recaptcha");
-    const number = `+91${phoneNumber}`;
-    try {
-      const firebase_otp_response = await Firebase.auth().signInWithPhoneNumber(
-        number,
-        recaptcha
-      );
-      setExpState(firebase_otp_response);
-      setShowPhoneVerificationBlock(false);
-      setShowOTPfieldBlock(true);
-      setButtonLoading(false);
-    } catch (error) {
-      setButtonLoading(false);
-      setShowPhoneVerificationBlock(false);
-      console.log(error.code);
-      if (error.code === "auth/too-many-requests") {
-        console.log(error.message);
-      } else {
-        console.error("Something went wrong");
+    if (validateForm()) {
+      setShowPhoneVerificationBlock(true);
+      setSubmitMessage("Verifying...");
+      setButtonLoading(true);
+      const recaptcha = new Firebase.auth.RecaptchaVerifier("recaptcha");
+      const number = `+91${phoneNumber}`;
+      try {
+        const firebase_otp_response = await Firebase.auth().signInWithPhoneNumber(
+          number,
+          recaptcha
+        );
+        setExpState(firebase_otp_response);
+        setShowPhoneVerificationBlock(false);
+        setShowOTPfieldBlock(true);
+        setButtonLoading(false);
+      } catch (error) {
+        setButtonLoading(false);
+        setShowPhoneVerificationBlock(false);
+        console.log(error.code);
+        if (error.code === "auth/too-many-requests") {
+          console.log(error.message);
+        } else {
+          console.error("Something went wrong");
+        }
       }
+    } else {
     }
   };
 
@@ -131,9 +157,12 @@ const plasmarequest = () => {
         data
       );
       console.log(response_plasmarequired);
-      setToastMessage("PLASMA REQUEST CREATED SUCCESSFULLY");
+      setToastMessage({
+        text: "PLASMA REQUEST CREATED SUCCESSFULLY",
+        warn: false,
+      });
       setToastId("success");
-      router.push("#success");
+      router.push("#form");
 
       setButtonLoading(false);
     } catch (error) {
@@ -161,28 +190,14 @@ const plasmarequest = () => {
           </p>
         </div>
       </div>
-      <div className="mt-14 max-w-6xl mx-auto md:px-4 px-7">
+      <div className="pt-14 max-w-6xl mx-auto md:px-4 px-7" id="form">
         <Toast
           id={toastId}
-          show={toastMessage.length ? true : false}
+          show={toastMessage.text.length ? true : false}
           className="mb-12"
-          message={toastMessage}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-            />
-          </svg>
-        </Toast>
+          message={toastMessage.text}
+          warn={toastMessage.warn}
+        />
         <div className="md:flex">
           <div className="flex flex-col md:mr-20 mb-12 md:mb-0">
             <label className="font-bold mb-2">First Name</label>
@@ -436,6 +451,7 @@ const plasmarequest = () => {
               domain
             </div>
           </span>
+          <button onClick={validateForm}>HELLLLLL</button>
           <div className="mt-10">
             {buttonLoading ? <div>{submitMessage}</div> : null}
             <div

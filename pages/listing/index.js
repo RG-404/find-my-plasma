@@ -66,7 +66,7 @@ const listing = () => {
                 handleInput(e, setSearchQuery);
               }}
               className="border border-blue-700 rounded md:w-96 h-10 px-5 mt-8 md:mr-4"
-              placeholder="enter your city"
+              placeholder=""
             />
             <select
               className="border border-blue-600 px-3 py-2 rounded max-w-6xl bg-black text-white md:mr-4"

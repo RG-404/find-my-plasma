@@ -31,7 +31,7 @@ const plasmarequest = () => {
   const [toastId, setToastId] = useState("");
 
   const [toastMessage, setToastMessage] = useState({
-    text: "PLASMA REQUEST CREATED SUCCESSFULLY",
+    text: "",
     warn: false,
   });
 

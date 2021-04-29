@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import Firebase from "../utils/firebase";
 import axios from "axios";
 import Spinner from "../components/Spinner";
 import Toast from "../components/Toast";
 
 const plasmarequest = () => {
+  const router = useRouter();
+
   const [checkConsent, setCheckConsent] = useState(false);
 
   const [showPhoneVerificationBlock, setShowPhoneVerificationBlock] = useState(
@@ -25,7 +28,10 @@ const plasmarequest = () => {
   const [stateName, setStateName] = useState("");
   const [OTP, setOTP] = useState("");
 
+  const [toastId, setToastId] = useState("");
+
   const [toastMessage, setToastMessage] = useState("");
+  const [submitMessage, setSubmitMessage] = useState("");
 
   const [buttonLoading, setButtonLoading] = useState(false);
 
@@ -70,6 +76,7 @@ const plasmarequest = () => {
 
   const handleSubmit = async (event) => {
     setShowPhoneVerificationBlock(true);
+    setSubmitMessage("Verifying...");
     setButtonLoading(true);
     const recaptcha = new Firebase.auth.RecaptchaVerifier("recaptcha");
     const number = `+91${phoneNumber}`;
@@ -97,6 +104,7 @@ const plasmarequest = () => {
   const handleFinalSubmit = async () => {
     try {
       setButtonLoading(true);
+      setSubmitMessage("Submitting plasma request...");
       const result = await expState.confirm(OTP);
       const data = {
         name: {
@@ -124,6 +132,9 @@ const plasmarequest = () => {
       );
       console.log(response_plasmarequired);
       setToastMessage("PLASMA REQUEST CREATED SUCCESSFULLY");
+      setToastId("success");
+      router.push("#success");
+
       setButtonLoading(false);
     } catch (error) {
       setButtonLoading(false);
@@ -145,15 +156,14 @@ const plasmarequest = () => {
         <div className="max-w-6xl mx-auto px-4 ">
           <div className="text-4xl my-6">Register as patient</div>
           <p className="text-gray-600">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ad
-            quibusdam autem, voluptates fugiat odit officia aspernatur non
-            aliquid, nostrum repudiandae voluptatem voluptas hic ratione optio
-            incidunt deserunt ipsam quo.
+            Kindly fill up the following form to register your name so that the
+            donor can find and contact you. We hope you get better soon.
           </p>
         </div>
       </div>
       <div className="mt-14 max-w-6xl mx-auto md:px-4 px-7">
         <Toast
+          id={toastId}
           show={toastMessage.length ? true : false}
           className="mb-12"
           message={toastMessage}
@@ -197,7 +207,7 @@ const plasmarequest = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col mt-12">
+        <div className="flex flex-col mt-10">
           <label className="font-bold mb-2">Phone number</label>
           <div className="border border-blue-600 rounded max-w-6xl md:w-96 flex items-center">
             <div className="px-2">+91</div>
@@ -211,8 +221,10 @@ const plasmarequest = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col mt-12">
-          <label className="font-bold mb-2">Alternate Phone number</label>
+        <div className="flex flex-col mt-10">
+          <label className="font-bold mb-2">
+            Alternate Phone number (optional)
+          </label>
           <div className="border border-blue-600 rounded max-w-6xl md:w-96 flex items-center">
             <div className="px-2">+91</div>
             <input
@@ -225,8 +237,8 @@ const plasmarequest = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col mt-12">
-          <label className="font-bold mb-2">Email address</label>
+        <div className="flex flex-col mt-10">
+          <label className="font-bold mb-2">Email address (optional )</label>
           <input
             className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
             name="email"
@@ -236,7 +248,7 @@ const plasmarequest = () => {
             }}
           />
         </div>
-        <div className="flex flex-col mt-12">
+        <div className="flex flex-col mt-10">
           <label className="font-bold mb-2">Age</label>
           <input
             className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
@@ -247,7 +259,7 @@ const plasmarequest = () => {
             }}
           />
         </div>
-        <div className="flex flex-col mt-12">
+        <div className="flex flex-col mt-10">
           <label className="font-bold mb-2">Your Blood Group</label>
           <select
             className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
@@ -270,7 +282,7 @@ const plasmarequest = () => {
             <option value="AB-">AB RhD positive (AB-)</option>
           </select>
         </div>
-        <div className="flex flex-col mt-12">
+        <div className="flex flex-col mt-10">
           <label className="font-bold mb-2">Acceptable Blood Groups</label>
           <span className="flex items-center mt-3">
             <input
@@ -361,18 +373,18 @@ const plasmarequest = () => {
             <div>AB RhD negative (AB-)</div>
           </span>
         </div>
-        <div className="flex flex-col mt-12">
-          <label className="font-bold mb-2">Locality</label>
+        <div className="flex flex-col mt-10">
+          <label className="font-bold mb-2">Locality (optional)</label>
           <input
             className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
-            name="state"
+            name="locality"
             value={locality}
             onChange={(e) => {
               handleInput(e, setLocality);
             }}
           />
         </div>
-        <div className="md:flex mt-12">
+        <div className="md:flex mt-10">
           <div className="flex flex-col md:mr-20 mb-12 md:mb-0">
             <label className="font-bold mb-2">City</label>
             <input
@@ -396,7 +408,7 @@ const plasmarequest = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col mt-12">
+        <div className="flex flex-col mt-10">
           <label className="font-bold mb-2">State</label>
           <input
             className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
@@ -407,7 +419,7 @@ const plasmarequest = () => {
             }}
           />
         </div>
-        <div className="flex flex-col mt-12">
+        <div className="flex flex-col mt-10">
           <span className="flex items-start md:items-center mt-3">
             <div className="pr-1 pt-1 md:pr-0 md:pt-0 flex items-start md:items-center">
               <input
@@ -425,6 +437,7 @@ const plasmarequest = () => {
             </div>
           </span>
           <div className="mt-10">
+            {buttonLoading ? <div>{submitMessage}</div> : null}
             <div
               className={`mb-10 ${
                 showPhoneVerificationBlock ? null : "hidden"
@@ -447,23 +460,19 @@ const plasmarequest = () => {
                 }}
               />
             </div>
-            <button
-              onClick={!showOTPfieldBlock ? handleSubmit : handleFinalSubmit}
-              className={`py-4 px-6 w-52 bg-blue-500 rounded  font-bold ${
-                checkConsent
-                  ? "hover:bg-yellow-300 transition duration-100"
-                  : "opacity-50  cursor-not-allowed"
-              } `}
-              disabled={checkConsent ? false : true}
-            >
-              {buttonLoading ? (
-                <Spinner />
-              ) : !showOTPfieldBlock ? (
-                "Get OTP >>>>"
-              ) : (
-                "Submit >>>>"
-              )}
-            </button>
+            {buttonLoading ? null : (
+              <button
+                onClick={!showOTPfieldBlock ? handleSubmit : handleFinalSubmit}
+                className={`py-4 px-6 w-52 bg-blue-500 rounded  font-bold ${
+                  checkConsent
+                    ? "hover:bg-yellow-300 transition duration-100"
+                    : "opacity-50  cursor-not-allowed"
+                } `}
+                disabled={checkConsent ? false : true}
+              >
+                {!showOTPfieldBlock ? "Get OTP >>>>" : "Submit >>>>"}
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -53,13 +53,14 @@ const NavBar = () => {
                   Plasma Listing
                 </a>
               </Link>
-
-              <a
-                href="#"
-                className="py-4 px-3 text-gray-700 hover:text-gray-900"
-              >
-                How it works
-              </a>
+              <Link href="/howitworks">
+                <a
+                  href="#"
+                  className="py-4 px-3 text-gray-700 hover:text-gray-900"
+                >
+                  How it works
+                </a>
+              </Link>
             </div>
           </div>
 
@@ -123,7 +124,7 @@ const NavBar = () => {
             My Account
           </a>
         </Link>
-        <Link href="#">
+        <Link href="/howitworks">
           <a
             className="block py-2 px-4 text-sm hover:bg-gray-200"
             onClick={toggleMenu}

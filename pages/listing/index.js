@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "axios";
 import Pagination from "../../components/Pagination";
-import { route } from "next/dist/next-server/server/router";
 
 const MAX_ITEM_PER_PAGE = 50;
 
@@ -15,6 +14,8 @@ const listing = () => {
   const [data, setData] = useState([]);
   const [totalPage, setTotalPage] = useState(-1);
   const [loadindData, setLoadindData] = useState(false);
+  const [searchBy, setSearchBy] = useState("city");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(async () => {
     setLoadindData(true);
@@ -34,23 +35,59 @@ const listing = () => {
     setLoadindData(false);
   }, [page]);
 
+  const handleInput = (event, setState) => {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    setState(value);
+  };
+
+  const getData = async () => {
+    try {
+      const route = `/api/plasmarequired/search?${searchBy}=${searchQuery}`;
+      const res = await axios.get(route);
+      console.log(route, res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       <div className="py-14 bg-gradient-to-t from-white via-blue-300 to-blue-500">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-4xl my-6">Plasma Request Listings</div>
           <p className="text-gray-600">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ad
-            quibusdam autem, voluptates fugiat odit officia aspernatur non
-            aliquid, nostrum repudiandae voluptatem voluptas hic ratione optio
-            incidunt deserunt ipsam quo.
+            Thank you for taking interest in donating plasma and offering a hand
+            of help. Here are the list of patients that needs your help.
           </p>
           <div>
             <input
-              className="border border-blue-700 rounded md:w-96 h-10 px-5 mt-8"
+              onChange={(e) => {
+                handleInput(e, setSearchQuery);
+              }}
+              className="border border-blue-700 rounded md:w-96 h-10 px-5 mt-8 md:mr-4"
               placeholder="enter your city"
             />
-            <button>Search</button>
+            <select
+              className="border border-blue-600 px-3 py-2 rounded max-w-6xl bg-black text-white md:mr-4"
+              name="blood-group"
+              value={searchBy}
+              onChange={(e) => {
+                handleInput(e, setSearchBy);
+              }}
+            >
+              <option value="city" defaultValue>
+                City
+              </option>
+              <option value="state">State</option>
+              <option value="locality">Locality</option>
+            </select>
+            <button
+              onClick={getData}
+              className="h-10 px-5 bg-black text-white rounded hover:bg-gray-700 transition duration-100"
+            >
+              Search
+            </button>
           </div>
         </div>
       </div>
@@ -122,24 +159,17 @@ const listing = () => {
         ) : null}
       </div>
       <div className="my-12 text-gray-600 max-w-6xl mx-auto px-4">
-        <p className="border-l border-blue-500 pl-3">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat
-          eligendi veritatis nostrum voluptatem reprehenderit excepturi, quo
-          illo natus ea maxime, cum facere impedit nulla pariatur obcaecati.
-          Laborum beatae obcaecati nostrum.
-        </p>
-        <p className="border-l border-blue-500 pl-3 mt-8">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat
-          eligendi veritatis nostrum voluptatem reprehenderit excepturi, quo
-          illo natus ea maxime, cum facere impedit nulla pariatur obcaecati.
-          Laborum beatae obcaecati nostrum.
-        </p>
-        <p className="border-l border-blue-500 pl-3 mt-8">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat
-          eligendi veritatis nostrum voluptatem reprehenderit excepturi, quo
-          illo natus ea maxime, cum facere impedit nulla pariatur obcaecati.
-          Laborum beatae obcaecati nostrum.
-        </p>
+        <p className="text-xl mb-8">Conditions for donors:</p>
+        {[
+          "You can donate only after 14 days of a Covid-19 positive report, \
+          if asymptomatic and 14 days after the symptoms have disappeared, if \
+          symptomatic.",
+          "If you took COVID-19 vaccine, you cannot donate until 28 days have passed.",
+          "Women who have ever been pregnant cannot donate plasma.",
+          "You are not eligible to donate if you have a lack of antibodies in your blood.",
+        ].map((item, index) => (
+          <p className="border-l border-blue-500 pl-3 mb-10">{item}</p>
+        ))}
       </div>
     </div>
   );

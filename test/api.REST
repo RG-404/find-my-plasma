@@ -51,3 +51,8 @@ GET http://localhost:3000/api/plasmarequired/checkstatus/8411994019
 Content-Type: application/json
 
 ###
+
+GET http://localhost:3000/api/plasmarequired/search?city=tinsuk
+Content-Type: application/json
+
+###

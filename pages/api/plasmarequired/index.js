@@ -109,8 +109,6 @@ const handler = async (req, res) => {
           break;
         }
       }
-
-      break;
     case "POST":
       let {
         name,
@@ -133,7 +131,6 @@ const handler = async (req, res) => {
         !bloodGroup ||
         !bloodGroupNeeded ||
         !address.city ||
-        !address.locality ||
         !address.pin ||
         !address.state ||
         !uid
@@ -165,7 +162,7 @@ const handler = async (req, res) => {
             identifier,
             uid,
             address: {
-              locality: address.city,
+              locality: address.locality,
               city: address.city,
               pin: address.pin,
               state: address.state,

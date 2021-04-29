@@ -91,9 +91,9 @@ const plasmarequest = () => {
       !stateName ||
       !areaPincode
     )
-      console.log("INCOMPLETE");
+      return false;
     else {
-      console.log("COMPLETE");
+      return true;
     }
   };
 

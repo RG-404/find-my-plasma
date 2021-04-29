@@ -1,17 +1,53 @@
-POST http://localhost:3000/api/test
+GET http://localhost:3000/api/plasmarequired
+Content-Type: application/json
+
+###
+
+GET http://localhost:3000/api/plasmarequired?id=rishparn4281756458
+Content-Type: application/json
+
+###
+
+GET http://localhost:3000/api/plasmarequired?uniqueid=BKdxsOk5aGTDYq45Uf8sseRrDWT2
+Content-Type: application/json
+
+###
+
+GET http://localhost:3000/api/plasmarequired?skip=2&limit=2
+Content-Type: application/json
+
+###
+
+GET http://localhost:3000/api/plasmarequired/count
+Content-Type: application/json
+
+###
+
+POST http://localhost:3000/api/plasmarequired
 Content-Type: application/json
 
 {
     "name" : {
-        "first" : "Rishparn",
-        "last" : "Gogoi"
+        "first" : "1",
+        "last" : "1"
     },
-    "email" : "gogoi.rishparn@gmail.com",
+    "email" : "1@gmail.com",
+    "phone" : "2345678901",
+    "phoneAlt" : "",
     "address" : {
-        "city" : "Jorhat",
-        "pin" : 7850007,
+    "city" : "Jorhat",
+        "pin" : "786007",
         "state" : "Assam"
     },
-    "blood" : "A+",
-    "phone" : 8811994019
+    "bloodGroup" : "A+",
+    "bloodGroupNeeded" : "Any",
+    "hospital" : "Jorhat Medical College",
+    "uid" : "kadfiusuffiusd"
 }
+
+###
+
+GET http://localhost:3000/api/plasmarequired/checkstatus/8411994019
+Content-Type: application/json
+
+###

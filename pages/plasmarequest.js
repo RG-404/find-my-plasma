@@ -1,79 +1,148 @@
 import { useEffect, useState } from "react";
 import Firebase from "../utils/firebase";
+import axios from "axios";
+import Spinner from "../components/Spinner";
+import Toast from "../components/Toast";
 
 const plasmarequest = () => {
-  const [check1, setCheck1] = useState(false);
-  const [check2, setCheck2] = useState(false);
-  const [captchaVerified, setCaptchaVerified] = useState(false);
-  const [phoneVerified, setPhoneVerified] = useState(false);
+  const [checkConsent, setCheckConsent] = useState(false);
+
   const [showPhoneVerificationBlock, setShowPhoneVerificationBlock] = useState(
     false
   );
+  const [showOTPfieldBlock, setShowOTPfieldBlock] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [age, setAge] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneNumberAlt, setPhoneNumberAlt] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [bloodGroup, setBloodGroup] = useState("");
+  const [bloodGroupNeeded, setBloodGroupNeeded] = useState([]);
+  const [locality, setLocality] = useState("");
   const [city, setCity] = useState("");
   const [areaPincode, setAreaPincode] = useState("");
   const [stateName, setStateName] = useState("");
   const [OTP, setOTP] = useState("");
 
-  const changeHandlerCheck1 = (event) => {
+  const [toastMessage, setToastMessage] = useState("");
+
+  const [buttonLoading, setButtonLoading] = useState(false);
+
+  const [expState, setExpState] = useState({});
+
+  const [checkAp, setCheckAp] = useState(false);
+  const [checkAn, setCheckAn] = useState(false);
+  const [checkBp, setCheckBp] = useState(false);
+  const [checkBn, setCheckBn] = useState(false);
+  const [checkOp, setCheckOp] = useState(false);
+  const [checkOn, setCheckOn] = useState(false);
+  const [checkABp, setCheckABp] = useState(false);
+  const [checkABn, setCheckABn] = useState(false);
+
+  useEffect(() => {
+    let accepteableBloodGroups = [];
+    if (checkAp) accepteableBloodGroups.push("A+");
+    if (checkAn) accepteableBloodGroups.push("A-");
+    if (checkBp) accepteableBloodGroups.push("B+");
+    if (checkBn) accepteableBloodGroups.push("B-");
+    if (checkOp) accepteableBloodGroups.push("O+");
+    if (checkOn) accepteableBloodGroups.push("O-");
+    if (checkABp) accepteableBloodGroups.push("AB+");
+    if (checkABn) accepteableBloodGroups.push("AB-");
+    setBloodGroupNeeded(accepteableBloodGroups);
+  }, [
+    checkAp,
+    checkAn,
+    checkBp,
+    checkBn,
+    checkOp,
+    checkOn,
+    checkABp,
+    checkABn,
+  ]);
+
+  const handleInput = (event, setState) => {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
-    setCheck1(value);
+    setState(value);
   };
 
-  const changeHandlerCheck2 = (event) => {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    setCheck2(value);
-  };
-
-  const handleTextInput = (event, setState) => {
-    setState(event.target.value);
-  };
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
     setShowPhoneVerificationBlock(true);
-    console.log("CLICK");
+    setButtonLoading(true);
     const recaptcha = new Firebase.auth.RecaptchaVerifier("recaptcha");
-    const number = "+918811994019";
+    const number = `+91${phoneNumber}`;
     try {
-      console.log(recaptcha);
-      const response = await Firebase.auth().signInWithPhoneNumber(
+      const firebase_otp_response = await Firebase.auth().signInWithPhoneNumber(
         number,
         recaptcha
       );
-      const code = prompt("OTP");
-      const result = await response.confirm(code);
-      console.log(result);
+      setExpState(firebase_otp_response);
+      setShowPhoneVerificationBlock(false);
+      setShowOTPfieldBlock(true);
+      setButtonLoading(false);
     } catch (error) {
-      console.log("NONONONONO");
-      console.log(error);
+      setButtonLoading(false);
+      setShowPhoneVerificationBlock(false);
+      console.log(error.code);
+      if (error.code === "auth/too-many-requests") {
+        console.log(error.message);
+      } else {
+        console.error("Something went wrong");
+      }
     }
   };
 
-  const handleSubmit_DEV = async () => {
-    console.log({
-      firstName,
-      lastName,
-      phoneNumber,
-      phoneNumberAlt,
-      emailAddress,
-      bloodGroup,
-      city,
-      areaPincode,
-      stateName,
-    });
+  const handleFinalSubmit = async () => {
+    try {
+      setButtonLoading(true);
+      const result = await expState.confirm(OTP);
+      const data = {
+        name: {
+          first: firstName,
+          last: lastName,
+        },
+        age,
+        uid: result.user.uid,
+        email: emailAddress,
+        phone: phoneNumber,
+        phoneAlt: phoneNumberAlt,
+        address: {
+          locality: locality,
+          city: city,
+          pin: areaPincode,
+          state: stateName,
+        },
+        bloodGroup,
+        bloodGroupNeeded,
+        hospital: "",
+      };
+      const response_plasmarequired = await axios.post(
+        "/api/plasmarequired",
+        data
+      );
+      console.log(response_plasmarequired);
+      setToastMessage("PLASMA REQUEST CREATED SUCCESSFULLY");
+      setButtonLoading(false);
+    } catch (error) {
+      setButtonLoading(false);
+
+      console.log(error);
+      setShowPhoneVerificationBlock(false);
+      console.log(error.code);
+      if (error.code === "auth/invalid-verification-code") {
+        console.log("WRONGGGG");
+      } else if (error.code === "auth/too-many-requests") {
+        console.log(error.message);
+      }
+    }
   };
 
   return (
     <div>
       <div className="py-14 bg-gradient-to-t from-white via-blue-300 to-blue-500">
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="max-w-6xl mx-auto px-4 ">
           <div className="text-4xl my-6">Register as patient</div>
           <p className="text-gray-600">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ad
@@ -83,16 +152,36 @@ const plasmarequest = () => {
           </p>
         </div>
       </div>
-      <div className="mt-14 max-w-6xl mx-auto px-4">
-        <div className="flex">
-          <div className="flex flex-col mr-20">
+      <div className="mt-14 max-w-6xl mx-auto md:px-4 px-7">
+        <Toast
+          show={toastMessage.length ? true : false}
+          className="mb-12"
+          message={toastMessage}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+            />
+          </svg>
+        </Toast>
+        <div className="md:flex">
+          <div className="flex flex-col md:mr-20 mb-12 md:mb-0">
             <label className="font-bold mb-2">First Name</label>
             <input
               className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
               name="given-name"
               value={firstName}
               onChange={(e) => {
-                handleTextInput(e, setFirstName);
+                handleInput(e, setFirstName);
               }}
             />
           </div>
@@ -103,7 +192,7 @@ const plasmarequest = () => {
               name="family-name"
               value={lastName}
               onChange={(e) => {
-                handleTextInput(e, setLastName);
+                handleInput(e, setLastName);
               }}
             />
           </div>
@@ -117,7 +206,7 @@ const plasmarequest = () => {
               name="tel"
               value={phoneNumber}
               onChange={(e) => {
-                handleTextInput(e, setPhoneNumber);
+                handleInput(e, setPhoneNumber);
               }}
             />
           </div>
@@ -131,7 +220,7 @@ const plasmarequest = () => {
               name="tel-alt"
               value={phoneNumberAlt}
               onChange={(e) => {
-                handleTextInput(e, setPhoneNumberAlt);
+                handleInput(e, setPhoneNumberAlt);
               }}
             />
           </div>
@@ -143,39 +232,155 @@ const plasmarequest = () => {
             name="email"
             value={emailAddress}
             onChange={(e) => {
-              handleTextInput(e, setEmailAddress);
+              handleInput(e, setEmailAddress);
             }}
           />
         </div>
         <div className="flex flex-col mt-12">
-          <label className="font-bold mb-2">Blood Group</label>
+          <label className="font-bold mb-2">Age</label>
+          <input
+            className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
+            name="age"
+            value={age}
+            onChange={(e) => {
+              handleInput(e, setAge);
+            }}
+          />
+        </div>
+        <div className="flex flex-col mt-12">
+          <label className="font-bold mb-2">Your Blood Group</label>
           <select
             className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
             name="blood-group"
             value={bloodGroup}
             onChange={(e) => {
-              handleTextInput(e, setBloodGroup);
+              handleInput(e, setBloodGroup);
             }}
           >
             <option value="default" hidden defaultValue>
               &nbsp;
             </option>
-            <option value="grapefruit">Grapefruit</option>
-            <option value="lime">Lime</option>
-            <option value="coconut">Coconut</option>
-            <option value="mango">Mango</option>
+            <option value="A+">A RhD positive (A+)</option>
+            <option value="A-">A RhD negative (A-)</option>
+            <option value="B+">A RhD negative (B+)</option>
+            <option value="B-">B RhD positive (B-)</option>
+            <option value="O+">B RhD negative (O+)</option>
+            <option value="O-">O RhD positive (O-)</option>
+            <option value="AB+">O RhD negative (AB+)</option>
+            <option value="AB-">AB RhD positive (AB-)</option>
           </select>
         </div>
-
-        <div className="flex mt-12">
-          <div className="flex flex-col mr-20">
+        <div className="flex flex-col mt-12">
+          <label className="font-bold mb-2">Acceptable Blood Groups</label>
+          <span className="flex items-center mt-3">
+            <input
+              type="checkbox"
+              className="mr-2"
+              checked={checkAp}
+              onChange={(e) => {
+                handleInput(e, setCheckAp);
+              }}
+            />
+            <div>A RhD positive (A+)</div>
+          </span>
+          <span className="flex items-center mt-3">
+            <input
+              type="checkbox"
+              className="mr-2"
+              checked={checkAn}
+              onChange={(e) => {
+                handleInput(e, setCheckAn);
+              }}
+            />
+            <div>A RhD negative (A-)</div>
+          </span>
+          <span className="flex items-center mt-3">
+            <input
+              type="checkbox"
+              className="mr-2"
+              checked={checkBp}
+              onChange={(e) => {
+                handleInput(e, setCheckBp);
+              }}
+            />
+            <div>B RhD positive (B+)</div>
+          </span>
+          <span className="flex items-center mt-3">
+            <input
+              type="checkbox"
+              className="mr-2"
+              checked={checkBn}
+              onChange={(e) => {
+                handleInput(e, setCheckBn);
+              }}
+            />
+            <div>B RhD negative (B-)</div>
+          </span>
+          <span className="flex items-center mt-3">
+            <input
+              type="checkbox"
+              className="mr-2"
+              checked={checkOp}
+              onChange={(e) => {
+                handleInput(e, setCheckOp);
+              }}
+            />
+            <div>O RhD positive (O+)</div>
+          </span>
+          <span className="flex items-center mt-3">
+            <input
+              type="checkbox"
+              className="mr-2"
+              checked={checkOn}
+              onChange={(e) => {
+                handleInput(e, setCheckOn);
+              }}
+            />
+            <div>O RhD negative (O-)</div>
+          </span>
+          <span className="flex items-center mt-3">
+            <input
+              type="checkbox"
+              className="mr-2"
+              checked={checkABp}
+              onChange={(e) => {
+                handleInput(e, setCheckABp);
+              }}
+            />
+            <div>AB RhD positive (AB+)</div>
+          </span>
+          <span className="flex items-center mt-3">
+            <input
+              type="checkbox"
+              className="mr-2"
+              checked={checkABn}
+              onChange={(e) => {
+                handleInput(e, setCheckABn);
+              }}
+            />
+            <div>AB RhD negative (AB-)</div>
+          </span>
+        </div>
+        <div className="flex flex-col mt-12">
+          <label className="font-bold mb-2">Locality</label>
+          <input
+            className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
+            name="state"
+            value={locality}
+            onChange={(e) => {
+              handleInput(e, setLocality);
+            }}
+          />
+        </div>
+        <div className="md:flex mt-12">
+          <div className="flex flex-col md:mr-20 mb-12 md:mb-0">
             <label className="font-bold mb-2">City</label>
             <input
               className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
               name="city"
               value={city}
               onChange={(e) => {
-                handleTextInput(e, setCity);
+                handleInput(e, setCity);
               }}
             />
           </div>
@@ -186,7 +391,7 @@ const plasmarequest = () => {
               name="postal-code"
               value={areaPincode}
               onChange={(e) => {
-                handleTextInput(e, setAreaPincode);
+                handleInput(e, setAreaPincode);
               }}
             />
           </div>
@@ -198,18 +403,22 @@ const plasmarequest = () => {
             name="state"
             value={stateName}
             onChange={(e) => {
-              handleTextInput(e, setStateName);
+              handleInput(e, setStateName);
             }}
           />
         </div>
         <div className="flex flex-col mt-12">
-          <span className="flex items-center mt-3">
-            <input
-              type="checkbox"
-              className="mr-2"
-              checked={check1}
-              onChange={changeHandlerCheck1}
-            />
+          <span className="flex items-start md:items-center mt-3">
+            <div className="pr-1 pt-1 md:pr-0 md:pt-0 flex items-start md:items-center">
+              <input
+                type="checkbox"
+                className="mr-2 form-checkbox"
+                checked={checkConsent}
+                onChange={(e) => {
+                  handleInput(e, setCheckConsent);
+                }}
+              />
+            </div>
             <div>
               Allow the following information to be available to the public
               domain
@@ -223,32 +432,42 @@ const plasmarequest = () => {
             >
               <div id="recaptcha"></div>
             </div>
-            <div className="flex flex-col mb-10">
+            <div
+              className={`flex flex-col mb-10 ${
+                showOTPfieldBlock ? null : "hidden"
+              }`}
+            >
               <label className="font-bold mb-2">OTP</label>
               <input
                 className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
                 name="one-time-code"
                 value={OTP}
                 onChange={(e) => {
-                  handleTextInput(e, setOTP);
+                  handleInput(e, setOTP);
                 }}
               />
             </div>
             <button
-              onClick={handleSubmit}
+              onClick={!showOTPfieldBlock ? handleSubmit : handleFinalSubmit}
               className={`py-4 px-6 w-52 bg-blue-500 rounded  font-bold ${
-                check1
+                checkConsent
                   ? "hover:bg-yellow-300 transition duration-100"
                   : "opacity-50  cursor-not-allowed"
               } `}
-              disabled={check1 ? false : true}
+              disabled={checkConsent ? false : true}
             >
-              Proceed {">>>>"}
+              {buttonLoading ? (
+                <Spinner />
+              ) : !showOTPfieldBlock ? (
+                "Get OTP >>>>"
+              ) : (
+                "Submit >>>>"
+              )}
             </button>
           </div>
         </div>
       </div>
-      <div className="my-12 max-w-6xl mx-auto px-4 text-gray-600">
+      <div className="my-12 max-w-6xl mx-auto md:px-4 px-7 text-gray-600">
         <p className="border-l border-blue-500 pl-3">
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat
           eligendi veritatis nostrum voluptatem reprehenderit excepturi, quo

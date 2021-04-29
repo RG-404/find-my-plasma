@@ -1,5 +1,14 @@
 import firebase from "firebase";
 
+const {
+  FIREBASE_API_KEY,
+  FIREBASE_PROJECT_ID,
+  FIREBASE_AUTH_DOMAIN,
+  FIREBASE_STORAGE_BUCKET,
+  FIREBASE_MESSAGE_SENDER_ID,
+  FIREBASE_APP_ID,
+} = process.env;
+
 // const config = {
 //   apiKey: FIREBASE_API_KEY,
 //   authDomain: FIREBASE_PROJECT_ID,

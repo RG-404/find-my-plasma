@@ -99,10 +99,38 @@ const NavBar = () => {
       </div>
       {/* mobile menu */}
       <div className={!isMobilemenushown ? "hidden" : null}>
-        <a className="block py-2 px-4 text-sm hover:bg-gray-200">Tracker</a>
-        <a href="#" className="block py-2 px-4 text-sm hover:bg-gray-200">
-          Pricing
-        </a>
+        <Link href="/listing">
+          <a
+            className="block py-2 px-4 text-sm hover:bg-gray-200"
+            onClick={toggleMenu}
+          >
+            Plasma Listing
+          </a>
+        </Link>
+        <Link href="/plasmarequest">
+          <a
+            className="block py-2 px-4 text-sm hover:bg-gray-200"
+            onClick={toggleMenu}
+          >
+            Make Request
+          </a>
+        </Link>
+        <Link href="/myaccount">
+          <a
+            className="block py-2 px-4 text-sm hover:bg-gray-200"
+            onClick={toggleMenu}
+          >
+            My Account
+          </a>
+        </Link>
+        <Link href="#">
+          <a
+            className="block py-2 px-4 text-sm hover:bg-gray-200"
+            onClick={toggleMenu}
+          >
+            How it works
+          </a>
+        </Link>
       </div>
 
       <div></div>

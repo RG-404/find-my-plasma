@@ -4,7 +4,11 @@ const PlasmaReqSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      default: "",
+      required: true,
+    },
+    age: {
+      type: Number,
+      required: false,
     },
     email: {
       type: String,
@@ -12,23 +16,59 @@ const PlasmaReqSchema = new mongoose.Schema(
     },
     phone: {
       type: Number,
+      required: true,
+    },
+    phoneAlt: {
+      type: Number,
     },
     bloodGroup: {
       type: String,
+      required: true,
+    },
+    bloodGroupNeeded: {
+      type: [String],
+      required: true,
+    },
+    isInHospital: {
+      type: Boolean,
+      required: true,
+    },
+    hospital: {
+      type: String,
+      default: "",
     },
     address: {
+      locality: {
+        type: String,
+        required: false,
+      },
       city: {
         type: String,
+        required: true,
       },
       pin: {
         type: Number,
+        required: true,
       },
       state: {
         type: String,
+        required: true,
       },
     },
-    signature: {
+    identifier: {
       type: String,
+      required: true,
+    },
+    uid: {
+      type: String,
+    },
+    isFullfilled: {
+      type: Boolean,
+      default: false,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
   },
   {

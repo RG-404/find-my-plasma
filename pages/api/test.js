@@ -1,6 +1,5 @@
 import dbConnect from "../../utils/dbConnect";
 import User from "../../models/plasmareq";
-import Firebase from "../../utils/firebase"
 
 export default async function handler(req, res) {
   const { method } = req;

@@ -1,53 +1,87 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import axios from "axios";
 
 const index = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const [listingNumber, setListingNumber] = useState(0);
+  const [data, setData] = useState({
+    address: {
+      city: null,
+      state: null,
+      locality: null,
+      pin: null,
+    },
+    email: null,
+    hospital: null,
+    _id: null,
+    name: null,
+    phone: null,
+    age: null,
+    phoneAlt: null,
+    bloodGroup: null,
+    bloodGroupNeeded: [null],
+    isInHospital: null,
+    identifier: null,
+    createdAt: null,
+  });
 
   useEffect(async () => {
     if (!id) return;
-    setListingNumber(parseInt(id));
+    const res = await axios.get(`/api/plasmarequired?id=${id}`);
+    console.log(res.data.data);
+    setData(res.data.data);
   }, [id]);
 
   return (
     <div>
       <div className="py-14 bg-gradient-to-t from-white via-blue-300 to-blue-500">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="text-4xl my-6">Jane Doe</div>
+          <div className="text-4xl my-6">{data.name}</div>
           <span className="flex mb-2">
-            <p className="font-bold md:w-1/6">Date of listing:&nbsp;</p>
-            <p className="text-gray-600">19-19-19</p>
+            <p className="font-bold md:w-1/4">Date of listing:&nbsp;</p>
+            <p className="text-gray-600">{data.createdAt}</p>
           </span>
           <span className="flex mb-2">
-            <p className="font-bold md:w-1/6">Blood Group:&nbsp;</p>
-            <p className="text-gray-600">A+</p>
+            <p className="font-bold md:w-1/4">Blood Group:&nbsp;</p>
+            <p className="text-gray-600">{data.bloodGroup}</p>
           </span>
           <span className="flex mb-2">
-            <p className="font-bold md:w-1/6">City:&nbsp;</p>
-            <p className="text-gray-600">Jorhat</p>
+            <p className="font-bold md:w-1/4">Accepted Blood Group(s):&nbsp;</p>
+            <p className="text-gray-600">{data.bloodGroupNeeded.join(", ")}</p>
           </span>
           <span className="flex mb-2">
-            <p className="font-bold md:w-1/6">Area Pincode:&nbsp;</p>
-            <p className="text-gray-600">785007</p>
+            <p className="font-bold md:w-1/4">City:&nbsp;</p>
+            <p className="text-gray-600">{data.address.city}</p>
           </span>
           <span className="flex mb-2">
-            <p className="font-bold md:w-1/6">State:&nbsp;</p>
-            <p className="text-gray-600">Assam</p>
+            <p className="font-bold md:w-1/4">Area Pincode:&nbsp;</p>
+            <p className="text-gray-600">{data.address.pin}</p>
           </span>
           <span className="flex mb-2">
-            <p className="font-bold md:w-1/6">Phone Number:&nbsp;</p>
-            <p className="text-gray-600">+91 88119 94019</p>
+            <p className="font-bold md:w-1/4">State:&nbsp;</p>
+            <p className="text-gray-600">{data.address.state}</p>
           </span>
           <span className="flex mb-2">
-            <p className="font-bold md:w-1/6">In hospital:&nbsp;</p>
-            <p className="text-gray-600">Yes</p>
+            <p className="font-bold md:w-1/4">Phone Number:&nbsp;</p>
+            <p className="text-gray-600">+91 {data.phone}</p>
           </span>
           <span className="flex mb-2">
-            <p className="font-bold md:w-1/6">Hospital:&nbsp;</p>
-            <p className="text-gray-600">ABC Hospital</p>
+            <p className="font-bold md:w-1/4">Phone Number (alt):&nbsp;</p>
+            <p className="text-gray-600">
+              {data.phoneAlt ? `+91 ${data.phoneAlt}` : "N/A"}
+            </p>
+          </span>
+          <span className="flex mb-2">
+            <p className="font-bold md:w-1/4">In hospital:&nbsp;</p>
+            <p className="text-gray-600">{data.isInHospital ? "Yes" : "No"}</p>
+          </span>
+          <span className="flex mb-2">
+            <p className="font-bold md:w-1/4">Hospital:&nbsp;</p>
+            <p className="text-gray-600">
+              {data.hospital ? data.hospital : "N/A"}
+            </p>
           </span>
         </div>
       </div>

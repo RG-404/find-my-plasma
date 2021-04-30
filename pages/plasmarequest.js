@@ -492,24 +492,14 @@ const plasmarequest = () => {
         </div>
       </div>
       <div className="my-12 max-w-6xl mx-auto md:px-4 px-7 text-gray-600">
-        <p className="border-l border-blue-500 pl-3">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat
-          eligendi veritatis nostrum voluptatem reprehenderit excepturi, quo
-          illo natus ea maxime, cum facere impedit nulla pariatur obcaecati.
-          Laborum beatae obcaecati nostrum.
-        </p>
-        <p className="border-l border-blue-500 pl-3 mt-8">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat
-          eligendi veritatis nostrum voluptatem reprehenderit excepturi, quo
-          illo natus ea maxime, cum facere impedit nulla pariatur obcaecati.
-          Laborum beatae obcaecati nostrum.
-        </p>
-        <p className="border-l border-blue-500 pl-3 mt-8">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat
-          eligendi veritatis nostrum voluptatem reprehenderit excepturi, quo
-          illo natus ea maxime, cum facere impedit nulla pariatur obcaecati.
-          Laborum beatae obcaecati nostrum.
-        </p>
+        {[
+          "The information displayed in the website will solely depend on the \
+          data you entered.",
+          "You can edit and view your information anytime you want from this website.",
+          "You can remove your name and details after you receive your treatment.",
+        ].map((item) => (
+          <p className="border-l border-blue-500 pl-3 mb-8">{item}</p>
+        ))}
       </div>
     </div>
   );

@@ -132,10 +132,8 @@ const myaccount = () => {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-4xl my-6">My Account</div>
           <p className="text-gray-600">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ad
-            quibusdam autem, voluptates fugiat odit officia aspernatur non
-            aliquid, nostrum repudiandae voluptatem voluptas hic ratione optio
-            incidunt deserunt ipsam quo.
+            Enter your phone number to view, edit or remove your information
+            from this website.
           </p>
         </div>
       </div>

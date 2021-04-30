@@ -13,27 +13,29 @@ const howitworks = () => {
           {item}
         </p>
       ))}
-      <p className="text-xl mb-8 font-bold">Conditions for donors:</p>
+      <p className="text-xl font-bold mb-6">Aim of this website</p>
       {[
-        "You can donate only after 14 days of a Covid-19 positive report, \
-          if asymptomatic and 14 days after the symptoms have disappeared, if \
-          symptomatic.",
-        "If you took COVID-19 vaccine, you cannot donate until 28 days have passed.",
-        "Women who have ever been pregnant cannot donate plasma.",
-        "You are not eligible to donate if you have a lack of antibodies in your blood.",
-      ].map((item, index) => (
-        <p className="mb-8">-&emsp;{item}</p>
+        "To let the patients put up a request and state their need in \
+        order for them to be found by a suitable donor for them.",
+        "To let plasma donors, find patients suffering from COVID-19 \
+        and are in immediate need of plasma.",
+        "To enable other organizations with similar interest, find and \
+        reach out to the patients for help.",
+      ].map((item) => (
+        <p className="mb-6">-&emsp;{item}</p>
       ))}
-      <p className="text-xl mb-8 font-bold">How to use this site?</p>
+      <p className="text-xl font-bold mb-6">Instruction for patients:</p>
       {[
-        "You can donate only after 14 days of a Covid-19 positive report, \
-          if asymptomatic and 14 days after the symptoms have disappeared, if \
-          symptomatic.",
-        "If you took COVID-19 vaccine, you cannot donate until 28 days have passed.",
-        "Women who have ever been pregnant cannot donate plasma.",
-        "You are not eligible to donate if you have a lack of antibodies in your blood.",
-      ].map((item, index) => (
-        <p className="mb-8">-&emsp;{item}</p>
+        'Click the "make request for plasma" option in the home page or \
+        you can click the option below.',
+        "We will need some details about you such as your phone number, \
+        blood group and your address.",
+        "An OTP will be sent to your given phone number. Enter it and you will \
+        be registered.",
+        "You will be listed in our plasma listing table. Once a suitable donor \
+        finds you, they can contact you as per the information you provided earlier.",
+      ].map((item) => (
+        <p className="mb-6">-&emsp;{item}</p>
       ))}
     </div>
   );

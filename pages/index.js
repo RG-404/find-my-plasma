@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,19 +6,25 @@ import styles from "../styles/Home.module.css";
 
 export default function Home() {
   return (
-    <div>
+    <Fragment>
+      <Head>
+        <title>Home</title>
+      </Head>
       <div className="mt-20 max-w-6xl mx-auto md:px-4 px-7">
         <div className="flex">
           <div className="md:w-1/2">
-            <div className="mb-12">
-              <p className="mb-2 font-bold">View plasma request list</p>
-              <p className="mb-2">For Donors</p>
-              <p className=" text-blue-600">
-                <a>
-                  <u>Donate Plasma</u> {">>>"}
-                </a>
-              </p>
-            </div>
+            <Link href="/listing">
+              <div className="mb-12 ">
+                <p className="mb-2 font-bold">View plasma request list</p>
+                <p className="mb-2">For Donors</p>
+                <p className=" text-blue-600">
+                  <a>
+                    <u>Donate Plasma</u> {">>>"}
+                  </a>
+                </p>
+              </div>
+            </Link>
+
             <div className="mb-20">
               <p className="mb-2 font-bold">Fill up plasma request form</p>
               <p className="mb-2">For Patients</p>
@@ -75,6 +82,6 @@ export default function Home() {
           disease.
         </p>
       </div>
-    </div>
+    </Fragment>
   );
 }

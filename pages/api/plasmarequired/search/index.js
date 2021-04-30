@@ -5,7 +5,16 @@ const handler = async (req, res) => {
   const { method } = req;
   switch (method) {
     case "GET":
-      const { city, state, pincode, locality } = req.query;
+      let { city, state, pincode, locality, skip, limit } = req.query;
+      if (parseInt(skip) === NaN || parseInt(limit) === NaN) {
+        res.status(400).json({ success: false });
+        break;
+      } else {
+        skip = parseInt(skip);
+        limit = parseInt(limit);
+      }
+      if (!skip) skip = 0;
+      if (!limit) limit = 0;
       const searchQuery = city
         ? city
         : state
@@ -30,7 +39,9 @@ const handler = async (req, res) => {
           $regex: regex,
           $options: "i",
         },
-      });
+      })
+        .skip(skip)
+        .limit(limit);
       res.status(200).json({ success: true, results });
       break;
     default:

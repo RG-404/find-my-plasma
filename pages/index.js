@@ -13,7 +13,6 @@ export default function Home() {
               <p className="mb-2 font-bold">View plasma request list</p>
               <p className="mb-2">For Donors</p>
               <p className=" text-blue-600">
-
                 <a>
                   <u>Donate Plasma</u> {">>>"}
                 </a>
@@ -35,7 +34,7 @@ export default function Home() {
               "This site focuses on helping the COVID-19 patients who are in need of plasma with the people who wish to and capable of donating it.",
               "If you have recovered from COVID-19, you can help others recover too and save lives by donating your plasma.",
             ].map((item, index) => (
-              <p className="mb-4" key={`home_list_1_${index}`}>
+              <p className="mb-4 leading-8" key={`home_list_1_${index}`}>
                 {item}
               </p>
             ))}
@@ -67,7 +66,7 @@ export default function Home() {
         <p className="text-xl font-bold mb-4">
           What is Convalescent plasma therapy?
         </p>
-        <p className="border-l border-blue-500 pl-3 mb-10">
+        <p className="border-l border-blue-500 pl-3 mb-10 leading-8">
           “Convalescent plasma therapy” is a treatment process where the blood
           of a person who has recovered from the infection is injected into a
           patient suffering from that disease. The plasma is the yellowish

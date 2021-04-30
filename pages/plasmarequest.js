@@ -451,7 +451,6 @@ const plasmarequest = () => {
               domain
             </div>
           </span>
-          <button onClick={validateForm}>HELLLLLL</button>
           <div className="mt-10">
             {buttonLoading ? <div>{submitMessage}</div> : null}
             <div

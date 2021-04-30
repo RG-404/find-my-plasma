@@ -60,7 +60,8 @@ const listing = () => {
             Thank you for taking interest in donating plasma and offering a hand
             of help. Here are the list of patients that needs your help.
           </p>
-          <div>
+          {/* Search Section */}
+          {/* <div>
             <input
               onChange={(e) => {
                 handleInput(e, setSearchQuery);
@@ -88,7 +89,7 @@ const listing = () => {
             >
               Search
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="mt-14 max-w-6xl mx-auto px-4 flex justify-start">

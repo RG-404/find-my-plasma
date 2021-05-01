@@ -24,16 +24,17 @@ export default function Home() {
                 </p>
               </div>
             </Link>
-
-            <div className="mb-20">
-              <p className="mb-2 font-bold">Fill up plasma request form</p>
-              <p className="mb-2">For Patients</p>
-              <p className="text-blue-600">
-                <a href="#">
-                  <u>Make request for plasma</u> {">>>"}
-                </a>
-              </p>
-            </div>
+            <Link href="/plasmarequest">
+              <div className="mb-20">
+                <p className="mb-2 font-bold">Fill up plasma request form</p>
+                <p className="mb-2">For Patients</p>
+                <p className="text-blue-600">
+                  <a href="#">
+                    <u>Make request for plasma</u> {">>>"}
+                  </a>
+                </p>
+              </div>
+            </Link>
 
             {[
               "The situation of the nation has gotten more severe during these past few weeks. \

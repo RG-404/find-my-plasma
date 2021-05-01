@@ -1,6 +1,6 @@
 const howitworks = () => {
   return (
-    <div className="mt-20 max-w-6xl mx-auto md:px-4 px-7">
+    <div className="mt-12 max-w-6xl mx-auto md:px-4 px-7">
       {[
         "The rising of covid cases left a lot of people in need of plasma. Due to \
         this, many are using the help of social media to ask for aid. However, \
@@ -13,7 +13,7 @@ const howitworks = () => {
           {item}
         </p>
       ))}
-      <p className="text-xl font-bold mb-6">Aim of this website</p>
+      <p className="text-xl font-bold mb-6 mt-10">Aim of this website</p>
       {[
         "To let the patients put up a request and state their need in \
         order for them to be found by a suitable donor for them.",
@@ -24,10 +24,10 @@ const howitworks = () => {
       ].map((item) => (
         <p className="mb-6">-&emsp;{item}</p>
       ))}
-      <p className="text-xl font-bold mb-6">Instruction for patients:</p>
+      <p className="text-xl font-bold mb-6 mt-10">Instruction for patients:</p>
       {[
         'Click the "make request for plasma" option in the home page or \
-        you can click the option below.',
+        "Make Request" option located in the top right corner.',
         "We will need some details about you such as your phone number, \
         blood group and your address.",
         "An OTP will be sent to your given phone number. Enter it and you will \

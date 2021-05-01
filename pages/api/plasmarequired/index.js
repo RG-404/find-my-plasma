@@ -120,6 +120,7 @@ const handler = async (req, res) => {
         bloodGroupNeeded,
         address,
         hospital,
+        isInHospital,
         uid,
       } = req.body;
       if (
@@ -138,18 +139,18 @@ const handler = async (req, res) => {
         res.status(200).json({ success: false });
       } else {
         try {
-          const isInHospital = false;
           if (!phoneAlt) phoneAlt = "";
-          if (!hospital) {
-            hospital = "";
-          } else {
-            isInHospital = true;
-          }
+          // let isInHospital = false;
+          // if (!hospital) {
+          //   hospital = "";
+          // } else {
+          //   isInHospital = true;
+          // }
           const date = new Date();
           const identifier = `${name.first.toLowerCase()}${
             date.getUTCMonth() + 1
           }${date.getUTCDate()}${date.getUTCHours()}${date.getUTCMinutes()}${date.getUTCMilliseconds()}`;
-          const new_plasma_request = await new PlasmaReq({
+          console.log({
             name: `${name.first} ${name.last}`,
             email,
             phone,
@@ -158,7 +159,7 @@ const handler = async (req, res) => {
             bloodGroup,
             bloodGroupNeeded,
             isInHospital,
-            hospital,
+            hospital: isInHospital ? hospital : "",
             identifier,
             uid,
             address: {
@@ -167,9 +168,28 @@ const handler = async (req, res) => {
               pin: address.pin,
               state: address.state,
             },
-          }); /* create a new model in the database */
-          new_plasma_request.save();
-          res.status(201).json({ success: true, data: new_plasma_request });
+          });
+          // const new_plasma_request = await new PlasmaReq({
+          //   name: `${name.first} ${name.last}`,
+          //   email,
+          //   phone,
+          //   age,
+          //   phoneAlt,
+          //   bloodGroup,
+          //   bloodGroupNeeded,
+          //   isInHospital,
+          //   hospital,
+          //   identifier,
+          //   uid,
+          //   address: {
+          //     locality: address.locality,
+          //     city: address.city,
+          //     pin: address.pin,
+          //     state: address.state,
+          //   },
+          // }); /* create a new model in the database */
+          // new_plasma_request.save();
+          res.status(201).json({ success: true, data: "new_plasma_request" });
         } catch (error) {
           console.log(error);
           res.status(400).json({ success: false });

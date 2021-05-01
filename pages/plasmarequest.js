@@ -27,6 +27,24 @@ const plasmarequest = () => {
   const [areaPincode, setAreaPincode] = useState("");
   const [stateName, setStateName] = useState("");
   const [OTP, setOTP] = useState("");
+  const [isInHospital, setIsInHospital] = useState(false);
+  const [hospital, setHospital] = useState("");
+
+  const [fieldMessages, setFieldMessages] = useState({
+    firstName: "",
+    lastName: "",
+    age: "",
+    phoneNumber: "",
+    phoneNumberAlt: "",
+    emailAddress: "",
+    bloodGroup: "",
+    bloodGroupNeeded: "",
+    locality: "",
+    city: "",
+    areaPincode: "",
+    stateName: "",
+    hospital: "",
+  });
 
   const [toastId, setToastId] = useState("");
 
@@ -150,7 +168,8 @@ const plasmarequest = () => {
         },
         bloodGroup,
         bloodGroupNeeded,
-        hospital: "",
+        isInHospital,
+        hospital,
       };
       const response_plasmarequired = await axios.post(
         "/api/plasmarequired",
@@ -177,6 +196,16 @@ const plasmarequest = () => {
         console.log(error.message);
       }
     }
+  };
+
+  const isInt = (value) => {
+    var er = /^-?[0-9]+$/;
+    return er.test(value);
+  };
+
+  const isEmail = (email) => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
   };
 
   return (
@@ -208,7 +237,23 @@ const plasmarequest = () => {
               onChange={(e) => {
                 handleInput(e, setFirstName);
               }}
+              onBlur={(e) => {
+                if (!e.target.value) {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    firstName: "First name cannot be empty",
+                  });
+                } else {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    firstName: "",
+                  });
+                }
+              }}
             />
+            {fieldMessages.firstName ? (
+              <div className="mt-2 text-red-600">{fieldMessages.firstName}</div>
+            ) : null}
           </div>
           <div className="flex flex-col">
             <label className="font-bold mb-2">Last Name</label>
@@ -219,7 +264,23 @@ const plasmarequest = () => {
               onChange={(e) => {
                 handleInput(e, setLastName);
               }}
+              onBlur={(e) => {
+                if (!e.target.value) {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    lastName: "Last name cannot be empty",
+                  });
+                } else {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    lastName: "",
+                  });
+                }
+              }}
             />
+            {fieldMessages.lastName ? (
+              <div className="mt-2 text-red-600">{fieldMessages.lastName}</div>
+            ) : null}
           </div>
         </div>
         <div className="flex flex-col mt-10">
@@ -229,12 +290,30 @@ const plasmarequest = () => {
             <input
               className="w-full px-3 py-2 bg-transparent"
               name="tel"
+              type="number"
               value={phoneNumber}
               onChange={(e) => {
                 handleInput(e, setPhoneNumber);
               }}
+              onBlur={(e) => {
+                console.log(typeof e.target.value);
+                if (e.target.value.length != 10) {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    phoneNumber: "Please enter a valid phone number",
+                  });
+                } else {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    phoneNumber: "",
+                  });
+                }
+              }}
             />
           </div>
+          {fieldMessages.phoneNumber ? (
+            <div className="mt-2 text-red-600">{fieldMessages.phoneNumber}</div>
+          ) : null}
         </div>
         <div className="flex flex-col mt-10">
           <label className="font-bold mb-2">
@@ -249,8 +328,31 @@ const plasmarequest = () => {
               onChange={(e) => {
                 handleInput(e, setPhoneNumberAlt);
               }}
+              onBlur={(e) => {
+                if (!e.target.value) {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    phoneNumberAlt: "",
+                  });
+                } else if (e.target.value.length != 10) {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    phoneNumberAlt: "Please enter a valid phone number",
+                  });
+                } else {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    phoneNumberAlt: "",
+                  });
+                }
+              }}
             />
           </div>
+          {fieldMessages.phoneNumberAlt ? (
+            <div className="mt-2 text-red-600">
+              {fieldMessages.phoneNumberAlt}
+            </div>
+          ) : null}
         </div>
         <div className="flex flex-col mt-10">
           <label className="font-bold mb-2">Email address (optional )</label>
@@ -261,18 +363,58 @@ const plasmarequest = () => {
             onChange={(e) => {
               handleInput(e, setEmailAddress);
             }}
+            onBlur={(e) => {
+              if (!e.target.value) {
+                setFieldMessages({
+                  ...fieldMessages,
+                  emailAddress: "",
+                });
+              } else if (!isEmail(e.target.value)) {
+                setFieldMessages({
+                  ...fieldMessages,
+                  emailAddress: "Please enter a valid email address",
+                });
+              } else {
+                setFieldMessages({
+                  ...fieldMessages,
+                  emailAddress: "",
+                });
+              }
+            }}
           />
+          {fieldMessages.emailAddress ? (
+            <div className="mt-2 text-red-600">
+              {fieldMessages.emailAddress}
+            </div>
+          ) : null}
         </div>
         <div className="flex flex-col mt-10">
           <label className="font-bold mb-2">Age</label>
           <input
             className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
             name="age"
+            type="number"
             value={age}
             onChange={(e) => {
               handleInput(e, setAge);
             }}
+            onBlur={(e) => {
+              if (parseInt(e.target.value) < 0 || !e.target.value) {
+                setFieldMessages({
+                  ...fieldMessages,
+                  age: "Please enter a valid age",
+                });
+              } else {
+                setFieldMessages({
+                  ...fieldMessages,
+                  age: "",
+                });
+              }
+            }}
           />
+          {fieldMessages.age ? (
+            <div className="mt-2 text-red-600">{fieldMessages.age}</div>
+          ) : null}
         </div>
         <div className="flex flex-col mt-10">
           <label className="font-bold mb-2">Your Blood Group</label>
@@ -389,6 +531,53 @@ const plasmarequest = () => {
           </span>
         </div>
         <div className="flex flex-col mt-10">
+          <label className="font-bold mb-2">Hospital</label>
+          <div className="flex items-start md:items-center py-2">
+            <div className="pr-1 pt-1 md:pr-0 md:pt-0 flex items-start md:items-center">
+              <input
+                type="checkbox"
+                className="mr-2 form-checkbox"
+                checked={isInHospital}
+                onChange={(e) => {
+                  handleInput(e, setIsInHospital);
+                }}
+              />
+            </div>
+            <div>The patient is currently admitted in a hospital</div>
+          </div>
+          {isInHospital ? (
+            <div className="flex flex-col mt-10">
+              <label className="font-bold mb-2">Hospital</label>
+              <input
+                className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
+                name="hospital"
+                value={hospital}
+                onChange={(e) => {
+                  handleInput(e, setHospital);
+                }}
+                onBlur={(e) => {
+                  if (!e.target.value.length && isInHospital) {
+                    setFieldMessages({
+                      ...fieldMessages,
+                      hospital: "Please enter the name of the hospital",
+                    });
+                  } else {
+                    setFieldMessages({
+                      ...fieldMessages,
+                      hospital: "",
+                    });
+                  }
+                }}
+              />
+              {fieldMessages.hospital ? (
+                <div className="mt-2 text-red-600">
+                  {fieldMessages.hospital}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+        <div className="flex flex-col mt-10">
           <label className="font-bold mb-2">Locality (optional)</label>
           <input
             className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
@@ -409,18 +598,53 @@ const plasmarequest = () => {
               onChange={(e) => {
                 handleInput(e, setCity);
               }}
+              onBlur={(e) => {
+                if (!e.target.value.length) {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    city: "Please enter a city",
+                  });
+                } else {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    city: "",
+                  });
+                }
+              }}
             />
+            {fieldMessages.city ? (
+              <div className="mt-2 text-red-600">{fieldMessages.city}</div>
+            ) : null}
           </div>
           <div className="flex flex-col">
             <label className="font-bold mb-2">Area Pincode</label>
             <input
               className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
               name="postal-code"
+              type="number"
               value={areaPincode}
               onChange={(e) => {
                 handleInput(e, setAreaPincode);
               }}
+              onBlur={(e) => {
+                if (e.target.value.length != 6) {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    areaPincode: "Please enter a valid pin code",
+                  });
+                } else {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    areaPincode: "",
+                  });
+                }
+              }}
             />
+            {fieldMessages.areaPincode ? (
+              <div className="mt-2 text-red-600">
+                {fieldMessages.areaPincode}
+              </div>
+            ) : null}
           </div>
         </div>
         <div className="flex flex-col mt-10">
@@ -432,7 +656,23 @@ const plasmarequest = () => {
             onChange={(e) => {
               handleInput(e, setStateName);
             }}
+            onBlur={(e) => {
+              if (!e.target.value.length) {
+                setFieldMessages({
+                  ...fieldMessages,
+                  stateName: "Please enter a state",
+                });
+              } else {
+                setFieldMessages({
+                  ...fieldMessages,
+                  stateName: "",
+                });
+              }
+            }}
           />
+          {fieldMessages.stateName ? (
+            <div className="mt-2 text-red-600">{fieldMessages.stateName}</div>
+          ) : null}
         </div>
         <div className="flex flex-col mt-10">
           <span className="flex items-start md:items-center mt-3">
@@ -462,7 +702,7 @@ const plasmarequest = () => {
             </div>
             <div
               className={`flex flex-col mb-10 ${
-                showOTPfieldBlock ? null : "hidden"
+                showOTPfieldBlock && !buttonLoading ? null : "hidden"
               }`}
             >
               <label className="font-bold mb-2">OTP</label>
@@ -479,11 +719,11 @@ const plasmarequest = () => {
               <button
                 onClick={!showOTPfieldBlock ? handleSubmit : handleFinalSubmit}
                 className={`py-4 px-6 w-52 bg-blue-500 rounded  font-bold ${
-                  checkConsent
+                  checkConsent && validateForm()
                     ? "hover:bg-yellow-300 transition duration-100"
                     : "opacity-50  cursor-not-allowed"
                 } `}
-                disabled={checkConsent ? false : true}
+                disabled={checkConsent && validateForm() ? false : true}
               >
                 {!showOTPfieldBlock ? "Get OTP >>>>" : "Submit >>>>"}
               </button>

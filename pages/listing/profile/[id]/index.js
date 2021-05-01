@@ -94,27 +94,15 @@ const index = () => {
         </button>
       </div>
       <div className="my-12 max-w-6xl mx-auto px-4">
-        <h1 className="text-2xl mb-5">Some question?</h1>
-        <p className="border-l border-blue-500 pl-3 mb-8 text-gray-600 text-justify">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat
-          eligendi veritatis nostrum voluptatem reprehenderit excepturi, quo
-          illo natus ea maxime, cum facere impedit nulla pariatur obcaecati.
-          Laborum beatae obcaecati nostrum.
-        </p>
-        <h1 className="text-2xl mb-5">Link some FAQ?</h1>
-        <p className="border-l border-blue-500 pl-3 mb-8 text-gray-600 text-justify">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat
-          eligendi veritatis nostrum voluptatem reprehenderit excepturi, quo
-          illo natus ea maxime, cum facere impedit nulla pariatur obcaecati.
-          Laborum beatae obcaecati nostrum.
-        </p>
-        <h1 className="text-2xl mb-5">Hello, answers?</h1>
-        <p className="border-l border-blue-500 pl-3 mb-8 text-gray-600 text-justify">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat
-          eligendi veritatis nostrum voluptatem reprehenderit excepturi, quo
-          illo natus ea maxime, cum facere impedit nulla pariatur obcaecati.
-          Laborum beatae obcaecati nostrum.
-        </p>
+        {[
+          "It is a great thing that you wish to help people in this difficult time.",
+          "You can contact the patient through the above given contact information.",
+          "However, we expect you not to share or use these information for any other purpose.",
+        ].map((item) => (
+          <p className="border-l border-blue-500 pl-3 mb-8 text-gray-600 text-justify">
+            {item}
+          </p>
+        ))}
       </div>
     </div>
   );

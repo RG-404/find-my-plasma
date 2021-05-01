@@ -20,6 +20,7 @@ const PlasmaReqSchema = new mongoose.Schema(
     },
     phoneAlt: {
       type: Number,
+      default: null,
     },
     bloodGroup: {
       type: String,
@@ -41,6 +42,7 @@ const PlasmaReqSchema = new mongoose.Schema(
       locality: {
         type: String,
         required: false,
+        default: "",
       },
       city: {
         type: String,
@@ -61,6 +63,7 @@ const PlasmaReqSchema = new mongoose.Schema(
     },
     uid: {
       type: String,
+      default: "",
     },
     isFullfilled: {
       type: Boolean,

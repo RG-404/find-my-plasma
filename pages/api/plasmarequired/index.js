@@ -140,17 +140,11 @@ const handler = async (req, res) => {
       } else {
         try {
           if (!phoneAlt) phoneAlt = "";
-          // let isInHospital = false;
-          // if (!hospital) {
-          //   hospital = "";
-          // } else {
-          //   isInHospital = true;
-          // }
           const date = new Date();
           const identifier = `${name.first.toLowerCase()}${
             date.getUTCMonth() + 1
           }${date.getUTCDate()}${date.getUTCHours()}${date.getUTCMinutes()}${date.getUTCMilliseconds()}`;
-          console.log({
+          const new_plasma_request = await new PlasmaReq({
             name: `${name.first} ${name.last}`,
             email,
             phone,
@@ -168,28 +162,9 @@ const handler = async (req, res) => {
               pin: address.pin,
               state: address.state,
             },
-          });
-          // const new_plasma_request = await new PlasmaReq({
-          //   name: `${name.first} ${name.last}`,
-          //   email,
-          //   phone,
-          //   age,
-          //   phoneAlt,
-          //   bloodGroup,
-          //   bloodGroupNeeded,
-          //   isInHospital,
-          //   hospital,
-          //   identifier,
-          //   uid,
-          //   address: {
-          //     locality: address.locality,
-          //     city: address.city,
-          //     pin: address.pin,
-          //     state: address.state,
-          //   },
-          // }); /* create a new model in the database */
-          // new_plasma_request.save();
-          res.status(201).json({ success: true, data: "new_plasma_request" });
+          }); /* create a new model in the database */
+          new_plasma_request.save();
+          res.status(201).json({ success: true });
         } catch (error) {
           console.log(error);
           res.status(400).json({ success: false });

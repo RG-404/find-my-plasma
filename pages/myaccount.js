@@ -1,9 +1,12 @@
 import { useEffect, useState, Fragment } from "react";
 import axios from "axios";
-import Firebase from "../utils/firebase";
+import firebase from "firebase/app";
 import "firebase/auth";
+import initFirebase from "../utils/firebase";
 import Toast from "../components/Toast";
 import Head from "next/head";
+
+initFirebase();
 
 const myaccount = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -70,12 +73,11 @@ const myaccount = () => {
       );
       if (res.data.count) {
         setloginLoading(true);
-        const recaptcha = new Firebase.auth.RecaptchaVerifier("recaptcha");
+        const recaptcha = new firebase.auth.RecaptchaVerifier("recaptcha");
         const number = `+91${phoneNumber}`;
-        const firebase_otp_response = await Firebase.auth().signInWithPhoneNumber(
-          number,
-          recaptcha
-        );
+        const firebase_otp_response = await firebase
+          .auth()
+          .signInWithPhoneNumber(number, recaptcha);
         setExpState(firebase_otp_response);
         setShowOTPBlock(true);
         setShowToast(true);
@@ -88,6 +90,7 @@ const myaccount = () => {
         });
       }
     } catch (error) {
+      console.log(error);
       setloginLoading(false);
       if (error.code === "auth/too-many-requests") {
         console.log(error.message);

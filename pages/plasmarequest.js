@@ -1,10 +1,14 @@
 import { useEffect, useState, Fragment } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import Firebase from "../utils/firebase";
+import firebase from "firebase/app";
 import "firebase/auth";
+import initFirebase from "../utils/firebase";
+
 import axios from "axios";
 import Toast from "../components/Toast";
+
+initFirebase();
 
 const plasmarequest = () => {
   const router = useRouter();
@@ -121,13 +125,12 @@ const plasmarequest = () => {
       setShowPhoneVerificationBlock(true);
       setSubmitMessage("Verifying...");
       setButtonLoading(true);
-      const recaptcha = new Firebase.auth.RecaptchaVerifier("recaptcha");
+      const recaptcha = new firebase.auth.RecaptchaVerifier("recaptcha");
       const number = `+91${phoneNumber}`;
       try {
-        const firebase_otp_response = await Firebase.auth().signInWithPhoneNumber(
-          number,
-          recaptcha
-        );
+        const firebase_otp_response = await firebase
+          .auth()
+          .signInWithPhoneNumber(number, recaptcha);
         setExpState(firebase_otp_response);
         setShowPhoneVerificationBlock(false);
         setShowOTPfieldBlock(true);

@@ -1,3 +1,13 @@
+# Locate Plasma
+
+The rising of covid cases left a lot of people in need of plasma. Due to this, many are using the help of social media to ask for aid. However, these request are scattered all over media in an unorganized manner. We created this platform which works solely for the purpose of listing patients who are in immediate need so that the donor can find and help them.
+
+The situation of the nation has gotten more severe during these past few weeks. Amidst this crisis, many people are coming forward to offer a helping hand towards the needs of the hour.
+
+This site focuses on helping the COVID-19 patients who are in need of plasma with the people who wish to and capable of donating it.
+
+If you have recovered from COVID-19, you can help others recover too and save lives by donating your plasma.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
@@ -26,9 +36,3 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

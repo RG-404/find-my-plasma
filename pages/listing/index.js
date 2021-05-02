@@ -9,7 +9,7 @@ const MAX_ITEM_PER_PAGE = 2;
 
 const listing = () => {
   const router = useRouter();
-  let { page, search, query } = router.query;
+  let { page, search, query, blood } = router.query;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [data, setData] = useState([]);
@@ -17,6 +17,7 @@ const listing = () => {
   const [loadindData, setLoadindData] = useState(false);
   const [searchBy, setSearchBy] = useState("city");
   const [searchQuery, setSearchQuery] = useState("");
+  const [bloodGroup, setBloodGroup] = useState("");
 
   const [pageinationLinks, setPageinationLinks] = useState({
     front: "",
@@ -28,6 +29,7 @@ const listing = () => {
     if (router.isReady) {
       if (search) setSearchBy(search);
       if (query) setSearchQuery(query);
+      if (blood) setBloodGroup(blood);
       if (page === undefined) page = 1;
       if (!page) return;
       setLoadindData(true);
@@ -36,15 +38,19 @@ const listing = () => {
       const get_count_path =
         search === undefined
           ? `/api/plasmarequired/count`
-          : `/api/plasmarequired/search?${search}=${query}`;
+          : `/api/plasmarequired/search?${search}=${query}${
+              blood ? `&blood=${encodeURIComponent(blood)}` : ""
+            }`;
+      console.log("count", get_count_path);
       const plasma_req_count_res = await axios.get(get_count_path);
       const plasma_req_count = plasma_req_count_res.data.count;
       setTotalPage(Math.ceil(plasma_req_count / MAX_ITEM_PER_PAGE));
       const get_data_path = `/api/plasmarequired${
         search ? `/search?${search}=${query}&` : "?"
-      }skip=${
+      }${blood ? `blood=${encodeURIComponent(blood)}&` : null}skip=${
         (parseInt(page) - 1) * MAX_ITEM_PER_PAGE
       }&limit=${MAX_ITEM_PER_PAGE}`;
+      console.log("search data", get_data_path);
       const response = await axios.get(get_data_path);
       const res_data = await response.data.data;
       setData(res_data);
@@ -100,18 +106,10 @@ const listing = () => {
             of help. Here are the list of patients that needs your help.
           </p>
           {/* Search Section */}
-          <div>
-            <input
-              value={searchQuery}
-              onChange={(e) => {
-                handleInput(e, setSearchQuery);
-              }}
-              className="border border-blue-700 rounded md:w-96 h-10 px-5 mt-8 md:mr-4"
-              placeholder=""
-            />
+          <div className="flex items-center mt-8">
             <select
-              className="border border-blue-600 px-3 py-2 rounded max-w-6xl bg-black text-white md:mr-4"
-              name="blood-group"
+              className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:mr-4 mr-auto"
+              name="search"
               value={searchBy}
               onChange={(e) => {
                 handleInput(e, setSearchBy);
@@ -124,11 +122,46 @@ const listing = () => {
               <option value="locality">Locality</option>
               <option value="pincode">Pincode</option>
             </select>
+            <input
+              value={searchQuery}
+              type={searchBy === "pincode" ? "number" : "text"}
+              onChange={(e) => {
+                handleInput(e, setSearchQuery);
+              }}
+              className="border border-blue-700 rounded md:w-96 h-10 px-5"
+              placeholder=""
+            />
+          </div>
+          <div className="flex items-center mt-8">
+            <select
+              className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96 md:mr-4 mr-auto"
+              name="blood-group"
+              value={bloodGroup}
+              onChange={(e) => {
+                handleInput(e, setBloodGroup);
+              }}
+            >
+              <option value="ALL" defaultValue>
+                All Blood Group
+              </option>
+              <option value="A+">A RhD positive (A+)</option>
+              <option value="A-">A RhD negative (A-)</option>
+              <option value="B+">A RhD negative (B+)</option>
+              <option value="B-">B RhD positive (B-)</option>
+              <option value="O+">B RhD negative (O+)</option>
+              <option value="O-">O RhD positive (O-)</option>
+              <option value="AB+">O RhD negative (AB+)</option>
+              <option value="AB-">AB RhD positive (AB-)</option>
+            </select>
             <Link
               scroll={false}
-              href={`/listing?search=${searchBy}&query=${searchQuery}&page=1`}
+              href={`/listing?search=${searchBy}&query=${searchQuery}${
+                bloodGroup !== "ALL"
+                  ? `&blood=${encodeURIComponent(bloodGroup)}`
+                  : ""
+              }&page=1`}
             >
-              <button className="h-10 px-5 bg-black text-white rounded hover:bg-gray-700 transition duration-100">
+              <button className="h-10 px-7 bg-black text-white rounded hover:bg-gray-700 transition duration-100">
                 Search
               </button>
             </Link>
@@ -148,6 +181,11 @@ const listing = () => {
             />
           </div>
         ) : null}
+      </div>
+      <div className="max-w-6xl mx-auto px-4">
+        <span className="bg-black text-white px-4 py-2">
+          Click on the name to view full details and contact information
+        </span>
       </div>
       <div className="overflow-x-scroll md:overflow-x-hidden">
         <div className="w-palsma-table md:w-auto">

@@ -28,11 +28,11 @@ Content-Type: application/json
 
 {
     "name" : {
-        "first" : "1",
-        "last" : "1"
+        "first" : "Rishi",
+        "last" : "Gogoi"
     },
-    "email" : "1@gmail.com",
-    "phone" : "2345678901",
+    "email" : "gogoi.rishparn@gmail.com",
+    "phone" : "8811994019",
     "phoneAlt" : "",
     "address" : {
     "city" : "Jorhat",
@@ -52,7 +52,7 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:3000/api/plasmarequired/search?city=tinsuk
+GET http://localhost:3000/api/plasmarequired/search?city=tinsuk&blood=AB%2B
 Content-Type: application/json
 
 ###

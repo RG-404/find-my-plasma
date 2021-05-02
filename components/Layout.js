@@ -8,6 +8,7 @@ const Layout = ({ children }) => {
       <BetaTag />
       <NavBar />
       {children}
+      <Footer />
     </div>
   );
 };

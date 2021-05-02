@@ -127,7 +127,6 @@ const handler = async (req, res) => {
         !name.first ||
         !name.last ||
         !age ||
-        !email ||
         !phone ||
         !bloodGroup ||
         !bloodGroupNeeded ||
@@ -144,7 +143,7 @@ const handler = async (req, res) => {
           const identifier = `${name.first.toLowerCase()}${
             date.getUTCMonth() + 1
           }${date.getUTCDate()}${date.getUTCHours()}${date.getUTCMinutes()}${date.getUTCMilliseconds()}`;
-          const new_plasma_request = await new PlasmaReq({
+          const new_plasma_request = await PlasmaReq.create({
             name: `${name.first} ${name.last}`,
             email,
             phone,
@@ -163,8 +162,7 @@ const handler = async (req, res) => {
               state: address.state,
             },
           }); /* create a new model in the database */
-          new_plasma_request.save();
-          res.status(201).json({ success: true });
+          res.status(201).json({ success: true, id: new_plasma_request.uid });
         } catch (error) {
           console.log(error);
           res.status(400).json({ success: false });

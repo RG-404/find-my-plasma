@@ -137,11 +137,8 @@ const plasmarequest = () => {
         console.log(error.code);
         if (error.code === "auth/too-many-requests") {
           console.log(error.message);
-        } else {
-          console.error("Something went wrong");
         }
       }
-    } else {
     }
   };
 
@@ -176,22 +173,27 @@ const plasmarequest = () => {
         data
       );
       console.log(response_plasmarequired);
-      setToastMessage({
-        text: "PLASMA REQUEST CREATED SUCCESSFULLY",
-        warn: false,
-      });
-      setToastId("success");
+      if (response_plasmarequired.data.success) {
+        setToastMessage({
+          text: "PLASMA REQUEST CREATED SUCCESSFULLY",
+          warn: false,
+        });
+      } else {
+        setToastMessage({
+          text: "SOMETHING WENT WRONG",
+          warn: true,
+        });
+      }
       router.push("#form");
 
       setButtonLoading(false);
     } catch (error) {
       setButtonLoading(false);
 
-      console.log(error);
       setShowPhoneVerificationBlock(false);
       console.log(error.code);
       if (error.code === "auth/invalid-verification-code") {
-        console.log("WRONGGGG");
+        console.log(error.message);
       } else if (error.code === "auth/too-many-requests") {
         console.log(error.message);
       }
@@ -296,7 +298,6 @@ const plasmarequest = () => {
                 handleInput(e, setPhoneNumber);
               }}
               onBlur={(e) => {
-                console.log(typeof e.target.value);
                 if (e.target.value.length != 10) {
                   setFieldMessages({
                     ...fieldMessages,

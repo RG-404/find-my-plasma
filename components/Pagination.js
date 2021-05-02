@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-const Pagination = ({ max, current }) => {
+const Pagination = ({ max, current, linkFront, linkBack, links }) => {
   const [indices, setIndices] = useState([]);
 
   useEffect(() => {
+    console.log({ max, current, linkFront, linkBack, links });
     const startIndex = current - 2 <= 0 ? 1 : current - 2;
     const endIndex = current + 2;
     let tempIndices = [];
@@ -39,7 +40,7 @@ const Pagination = ({ max, current }) => {
   return (
     <div className="flex">
       {current != 1 ? (
-        <Link href={`/listing?page=${current - 1}`}>
+        <Link href={linkBack}>
           <div className="cursor-pointer border w-10 h-10 text-center items-center flex justify-center bg-gray-100">
             {"<"}
           </div>
@@ -47,7 +48,7 @@ const Pagination = ({ max, current }) => {
       ) : null}
       {indices.map((index, i) => {
         return (
-          <Link href={`/listing?page=${index}`}>
+          <Link href={`${links}${index}`}>
             <div
               className={`cursor-pointer border w-10 h-10 text-center items-center flex justify-center ${
                 current == index ? "bg-gray-900 text-white" : "bg-gray-100"
@@ -60,7 +61,7 @@ const Pagination = ({ max, current }) => {
         );
       })}
       {current != max ? (
-        <Link href={`/listing?page=${current + 1}`}>
+        <Link href={linkFront}>
           <div className="cursor-pointer border w-10 h-10 text-center items-center flex justify-center bg-gray-100">
             {">"}
           </div>

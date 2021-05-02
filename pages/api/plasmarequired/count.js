@@ -6,6 +6,8 @@ const handler = async (req, res) => {
   await dbConnect();
   switch (method) {
     case "GET":
+      let { city, state, pincode, locality } = req.query;
+      
       try {
         const count = await PlasmaReq.countDocuments();
         res.status(200).json({ success: true, count });

@@ -4,10 +4,14 @@ module.exports = {
   theme: {
     minHeight: {
       0: "0",
-      "48": "48rem",
+      48: "48rem",
       full: "100%",
     },
-    extend: {},
+    extend: {
+      width: {
+        "palsma-table": "60rem",
+      },
+    },
   },
   variants: {
     extend: {},

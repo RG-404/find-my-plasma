@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "axios";
 import Pagination from "../../components/Pagination";
-import { route } from "next/dist/next-server/server/router";
 
 const MAX_ITEM_PER_PAGE = 2;
 

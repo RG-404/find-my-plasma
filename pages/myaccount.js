@@ -1,9 +1,7 @@
-import { isValidElement, useEffect, useState, Fragment } from "react";
-import { useRouter } from "next/router";
+import {  useEffect, useState, Fragment } from "react";
 import axios from "axios";
 import Firebase from "../utils/firebase";
 import "firebase/auth";
-import Spinner from "../components/Spinner";
 import Toast from "../components/Toast";
 
 const myaccount = () => {
@@ -90,12 +88,9 @@ const myaccount = () => {
       }
     } catch (error) {
       setloginLoading(false);
-      console.log(error.code);
       if (error.code === "auth/too-many-requests") {
         console.log(error.message);
-      } else {
-        console.error("Something went wrong");
-      }
+      } 
     }
   };
 
@@ -105,12 +100,10 @@ const myaccount = () => {
       const result = await expState.confirm(OTP);
       const uid = result.user.uid;
       setUid(uid);
-      console.log(uid);
       setIsLoggedIn(true);
       setloginLoading(false);
     } catch (error) {
       setloginLoading(false);
-      console.log(error);
       if (error.code === "auth/invalid-verification-code") {
         console.log("Wrong OTP");
       } else if (error.code === "auth/too-many-requests") {
@@ -122,7 +115,6 @@ const myaccount = () => {
   useEffect(async () => {
     if (!uid) return;
     const res = await axios.get(`/api/plasmarequired?uniqueid=${uid}`);
-    console.log(res.data.data);
     setData(res.data.data);
   }, [isLoggedIn]);
 

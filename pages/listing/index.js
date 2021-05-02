@@ -30,14 +30,12 @@ const listing = () => {
       if (page === undefined) page = 1;
       if (!page) return;
       setLoadindData(true);
-      console.log({ page, search, query });
       setCurrentIndex(parseInt(page));
 
       const get_count_path =
         search === undefined
           ? `/api/plasmarequired/count`
           : `/api/plasmarequired/search?${search}=${query}`;
-      console.log(get_count_path);
       const plasma_req_count_res = await axios.get(get_count_path);
       const plasma_req_count = plasma_req_count_res.data.count;
       setTotalPage(Math.ceil(plasma_req_count / MAX_ITEM_PER_PAGE));
@@ -46,7 +44,6 @@ const listing = () => {
       }skip=${
         (parseInt(page) - 1) * MAX_ITEM_PER_PAGE
       }&limit=${MAX_ITEM_PER_PAGE}`;
-      console.log(get_data_path);
       const response = await axios.get(get_data_path);
       const res_data = await response.data.data;
       setData(res_data);
@@ -57,7 +54,6 @@ const listing = () => {
   useEffect(() => {
     if (router.isReady) {
       if (query) {
-        console.log("SEARCH MODE ON");
         setPageinationLinks({
           front: `/listing?${
             searchBy ? `search=${searchBy}&query=${searchQuery}&` : null
@@ -70,7 +66,6 @@ const listing = () => {
           }page=`,
         });
       } else {
-        console.log("SEARCH MODE OFF");
         setPageinationLinks({
           front: `/listing?page=${currentIndex + 1}`,
           back: `/listing?page=${currentIndex - 1}`,

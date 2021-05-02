@@ -30,7 +30,6 @@ const index = () => {
   useEffect(async () => {
     if (!id) return;
     const res = await axios.get(`/api/plasmarequired?id=${id}`);
-    console.log(res.data.data);
     setData(res.data.data);
   }, [id]);
 

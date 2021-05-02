@@ -134,7 +134,6 @@ const plasmarequest = () => {
       } catch (error) {
         setButtonLoading(false);
         setShowPhoneVerificationBlock(false);
-        console.log(error.code);
         if (error.code === "auth/too-many-requests") {
           console.log(error.message);
         }
@@ -172,7 +171,6 @@ const plasmarequest = () => {
         "/api/plasmarequired",
         data
       );
-      console.log(response_plasmarequired);
       if (response_plasmarequired.data.success) {
         setToastMessage({
           text: "PLASMA REQUEST CREATED SUCCESSFULLY",
@@ -191,7 +189,6 @@ const plasmarequest = () => {
       setButtonLoading(false);
 
       setShowPhoneVerificationBlock(false);
-      console.log(error.code);
       if (error.code === "auth/invalid-verification-code") {
         console.log(error.message);
       } else if (error.code === "auth/too-many-requests") {

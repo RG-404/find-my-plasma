@@ -1,8 +1,9 @@
-import {  useEffect, useState, Fragment } from "react";
+import { useEffect, useState, Fragment } from "react";
 import axios from "axios";
 import Firebase from "../utils/firebase";
 import "firebase/auth";
 import Toast from "../components/Toast";
+import Head from "next/head";
 
 const myaccount = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -90,7 +91,7 @@ const myaccount = () => {
       setloginLoading(false);
       if (error.code === "auth/too-many-requests") {
         console.log(error.message);
-      } 
+      }
     }
   };
 
@@ -119,157 +120,170 @@ const myaccount = () => {
   }, [isLoggedIn]);
 
   return (
-    <div className="min-h-48">
-      <div className="py-14 bg-gradient-to-t from-white via-blue-300 to-blue-500">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-4xl my-6">My Account</div>
-          <p className="text-gray-600">
-            Enter your phone number to view, edit or remove your information
-            from this website.
-          </p>
+    <Fragment>
+      <Head>
+        <title>My Account</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta
+          name="description"
+          content="View, edit or remove your information
+          from this website"
+        />
+      </Head>
+      <div className="min-h-48">
+        <div className="py-14 bg-gradient-to-t from-white via-blue-300 to-blue-500">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-4xl my-6">My Account</div>
+            <p className="text-gray-600">
+              Enter your phone number to view, edit or remove your information
+              from this website.
+            </p>
+          </div>
         </div>
-      </div>
-      <div className="max-w-6xl mx-auto px-4">
-        {!isLoggedIn ? (
-          <Fragment>
-            <Toast
-              show={showToast}
-              className="mb-6"
-              message={`OTP SENT TO +91 ${phoneNumber}`}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+        <div className="max-w-6xl mx-auto px-4">
+          {!isLoggedIn ? (
+            <Fragment>
+              <Toast
+                show={showToast}
+                className="mb-6"
+                message={`OTP SENT TO +91 ${phoneNumber}`}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-                />
-              </svg>
-            </Toast>
-            <div
-              className={`${showOTPBlock ? "hidden" : "flex"} flex-col mb-4`}
-            >
-              <label className="font-bold mb-2">Phone number</label>
-              <div className="border border-blue-600 rounded max-w-6xl md:w-96 flex items-center">
-                <div className="px-2">+91</div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                  />
+                </svg>
+              </Toast>
+              <div
+                className={`${showOTPBlock ? "hidden" : "flex"} flex-col mb-4`}
+              >
+                <label className="font-bold mb-2">Phone number</label>
+                <div className="border border-blue-600 rounded max-w-6xl md:w-96 flex items-center">
+                  <div className="px-2">+91</div>
+                  <input
+                    className="w-full px-3 py-2 bg-transparent"
+                    name="tel"
+                    value={phoneNumber}
+                    onChange={(e) => {
+                      clearWarning();
+                      handleInput(e, setPhoneNumber);
+                    }}
+                  />
+                </div>
+              </div>
+              <div
+                className={`${showOTPBlock ? "flex" : "hidden"} flex-col mb-4`}
+              >
+                <label className="font-bold mb-2">OTP</label>
                 <input
-                  className="w-full px-3 py-2 bg-transparent"
-                  name="tel"
-                  value={phoneNumber}
+                  className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
+                  name="state"
+                  value={OTP}
                   onChange={(e) => {
-                    clearWarning();
-                    handleInput(e, setPhoneNumber);
+                    handleInput(e, setOTP);
                   }}
                 />
               </div>
-            </div>
-            <div
-              className={`${showOTPBlock ? "flex" : "hidden"} flex-col mb-4`}
-            >
-              <label className="font-bold mb-2">OTP</label>
-              <input
-                className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
-                name="state"
-                value={OTP}
-                onChange={(e) => {
-                  handleInput(e, setOTP);
-                }}
-              />
-            </div>
-            {message.text ? (
-              <div className={`my-4 ${message.color}`}>{message.text}</div>
-            ) : null}
-            {loginLoading ? <div className="my-4">Verifying ...</div> : null}
-            <div
-              className={`mb-10 ${
-                loginLoading && !showOTPBlock ? "block" : "hidden"
-              }`}
-            >
-              <div id="recaptcha"></div>
-            </div>
-            <button
-              disabled={buttonDisabled}
-              onClick={showOTPBlock ? handleFinalSubmit : handleSubmit}
-              className={`py-2 px-6 mb-14 ${
-                loginLoading ? "hidden" : "block"
-              } bg-blue-500 rounded font-bold hover:bg-yellow-300 transition duration-100 `}
-            >
-              {showOTPBlock ? "LOGIN >>>" : "PROCEED >>>"}
-            </button>
-          </Fragment>
-        ) : (
-          <Fragment>
-            <div className="text-4xl my-6">Summary</div>
-            <div>
-              <span className="flex mb-2">
-                <p className="font-bold md:w-1/4">Name:&nbsp;</p>
-                <p className="text-gray-600">{data.name}</p>
-              </span>
-              <span className="flex mb-2">
-                <p className="font-bold md:w-1/4">Date of listing:&nbsp;</p>
-                <p className="text-gray-600">{data.createdAt}</p>
-              </span>
-              <span className="flex mb-2">
-                <p className="font-bold md:w-1/4">Blood Group:&nbsp;</p>
-                <p className="text-gray-600">{data.bloodGroup}</p>
-              </span>
-              <span className="flex mb-2">
-                <p className="font-bold md:w-1/4">
-                  Accepted Blood Group(s):&nbsp;
-                </p>
-                <p className="text-gray-600">
-                  {data.bloodGroupNeeded.join(", ")}
-                </p>
-              </span>
-              <span className="flex mb-2">
-                <p className="font-bold md:w-1/4">City:&nbsp;</p>
-                <p className="text-gray-600">{data.address.city}</p>
-              </span>
-              <span className="flex mb-2">
-                <p className="font-bold md:w-1/4">Area Pincode:&nbsp;</p>
-                <p className="text-gray-600">{data.address.pin}</p>
-              </span>
-              <span className="flex mb-2">
-                <p className="font-bold md:w-1/4">State:&nbsp;</p>
-                <p className="text-gray-600">{data.address.state}</p>
-              </span>
-              <span className="flex mb-2">
-                <p className="font-bold md:w-1/4">Phone Number:&nbsp;</p>
-                <p className="text-gray-600">+91 {data.phone}</p>
-              </span>
-              <span className="flex mb-2">
-                <p className="font-bold md:w-1/4">Phone Number (alt):&nbsp;</p>
-                <p className="text-gray-600">
-                  {data.phoneAlt ? `+91 ${data.phoneAlt}` : "N/A"}
-                </p>
-              </span>
-              <span className="flex mb-2">
-                <p className="font-bold md:w-1/4">In hospital:&nbsp;</p>
-                <p className="text-gray-600">
-                  {data.isInHospital ? "Yes" : "No"}
-                </p>
-              </span>
-              <span className="flex mb-2">
-                <p className="font-bold md:w-1/4">Hospital:&nbsp;</p>
-                <p className="text-gray-600">
-                  {data.hospital ? data.hospital : "N/A"}
-                </p>
-              </span>
-            </div>
-            <div className="mt-10 mb-14">
-              <div className="text-3xl mb-3">Status</div>
-              <div className="mb-3">Looking for plasma</div>
-            </div>
-          </Fragment>
-        )}
+              {message.text ? (
+                <div className={`my-4 ${message.color}`}>{message.text}</div>
+              ) : null}
+              {loginLoading ? <div className="my-4">Verifying ...</div> : null}
+              <div
+                className={`mb-10 ${
+                  loginLoading && !showOTPBlock ? "block" : "hidden"
+                }`}
+              >
+                <div id="recaptcha"></div>
+              </div>
+              <button
+                disabled={buttonDisabled}
+                onClick={showOTPBlock ? handleFinalSubmit : handleSubmit}
+                className={`py-2 px-6 mb-14 ${
+                  loginLoading ? "hidden" : "block"
+                } bg-blue-500 rounded font-bold hover:bg-yellow-300 transition duration-100 `}
+              >
+                {showOTPBlock ? "LOGIN >>>" : "PROCEED >>>"}
+              </button>
+            </Fragment>
+          ) : (
+            <Fragment>
+              <div className="text-4xl my-6">Summary</div>
+              <div>
+                <span className="flex mb-2">
+                  <p className="font-bold md:w-1/4">Name:&nbsp;</p>
+                  <p className="text-gray-600">{data.name}</p>
+                </span>
+                <span className="flex mb-2">
+                  <p className="font-bold md:w-1/4">Date of listing:&nbsp;</p>
+                  <p className="text-gray-600">{data.createdAt}</p>
+                </span>
+                <span className="flex mb-2">
+                  <p className="font-bold md:w-1/4">Blood Group:&nbsp;</p>
+                  <p className="text-gray-600">{data.bloodGroup}</p>
+                </span>
+                <span className="flex mb-2">
+                  <p className="font-bold md:w-1/4">
+                    Accepted Blood Group(s):&nbsp;
+                  </p>
+                  <p className="text-gray-600">
+                    {data.bloodGroupNeeded.join(", ")}
+                  </p>
+                </span>
+                <span className="flex mb-2">
+                  <p className="font-bold md:w-1/4">City:&nbsp;</p>
+                  <p className="text-gray-600">{data.address.city}</p>
+                </span>
+                <span className="flex mb-2">
+                  <p className="font-bold md:w-1/4">Area Pincode:&nbsp;</p>
+                  <p className="text-gray-600">{data.address.pin}</p>
+                </span>
+                <span className="flex mb-2">
+                  <p className="font-bold md:w-1/4">State:&nbsp;</p>
+                  <p className="text-gray-600">{data.address.state}</p>
+                </span>
+                <span className="flex mb-2">
+                  <p className="font-bold md:w-1/4">Phone Number:&nbsp;</p>
+                  <p className="text-gray-600">+91 {data.phone}</p>
+                </span>
+                <span className="flex mb-2">
+                  <p className="font-bold md:w-1/4">
+                    Phone Number (alt):&nbsp;
+                  </p>
+                  <p className="text-gray-600">
+                    {data.phoneAlt ? `+91 ${data.phoneAlt}` : "N/A"}
+                  </p>
+                </span>
+                <span className="flex mb-2">
+                  <p className="font-bold md:w-1/4">In hospital:&nbsp;</p>
+                  <p className="text-gray-600">
+                    {data.isInHospital ? "Yes" : "No"}
+                  </p>
+                </span>
+                <span className="flex mb-2">
+                  <p className="font-bold md:w-1/4">Hospital:&nbsp;</p>
+                  <p className="text-gray-600">
+                    {data.hospital ? data.hospital : "N/A"}
+                  </p>
+                </span>
+              </div>
+              <div className="mt-10 mb-14">
+                <div className="text-3xl mb-3">Status</div>
+                <div className="mb-3">Looking for plasma</div>
+              </div>
+            </Fragment>
+          )}
+        </div>
       </div>
-    </div>
+    </Fragment>
   );
 };
 

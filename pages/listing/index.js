@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Head from "next/head";
 import axios from "axios";
 import Pagination from "../../components/Pagination";
 
@@ -82,7 +83,15 @@ const listing = () => {
   };
 
   return (
-    <div>
+    <Fragment>
+      <Head>
+        <title>Plasma Listing</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta
+          name="description"
+          content="Here are the list of patients that needs your help."
+        />
+      </Head>
       <div className="py-14 bg-gradient-to-t from-white via-blue-300 to-blue-500">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-4xl my-6">Plasma Request Listings</div>
@@ -233,7 +242,7 @@ const listing = () => {
           <p className="border-l border-blue-500 pl-3 mb-10">{item}</p>
         ))}
       </div>
-    </div>
+    </Fragment>
   );
 };
 

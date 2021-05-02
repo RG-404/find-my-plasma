@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import axios from "axios";
 
 const index = () => {
@@ -34,7 +35,15 @@ const index = () => {
   }, [id]);
 
   return (
-    <div>
+    <Fragment>
+      <Head>
+        <title>Patient Details</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta
+          name="description"
+          content="Details of patient that needs your help."
+        />
+      </Head>
       <div className="py-14 bg-gradient-to-t from-white via-blue-300 to-blue-500">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-4xl my-6">{data.name}</div>
@@ -103,7 +112,7 @@ const index = () => {
           </p>
         ))}
       </div>
-    </div>
+    </Fragment>
   );
 };
 

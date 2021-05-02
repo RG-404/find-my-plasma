@@ -7,7 +7,13 @@ export default function Home() {
   return (
     <Fragment>
       <Head>
-        <title>Home</title>
+        <title>Home - Locate Plasma</title>
+        <meta
+          name="description"
+          content="This site focuses on helping the COVID-19 
+          patients who are in need of plasma with the people who 
+          wish to and capable of donating it"
+        />
       </Head>
       <div className="mt-20 max-w-6xl mx-auto md:px-4 px-7">
         <div className="flex">

@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import Firebase from "../utils/firebase";
 import "firebase/auth";
 import axios from "axios";
@@ -208,7 +209,16 @@ const plasmarequest = () => {
   };
 
   return (
-    <div>
+    <Fragment>
+      <Head>
+        <title>Make Plasma Request</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta
+          name="description"
+          content="Register your name for
+            donors to find and contact you"
+        />
+      </Head>
       <div className="py-14 bg-gradient-to-t from-white via-blue-300 to-blue-500">
         <div className="max-w-6xl mx-auto px-4 ">
           <div className="text-4xl my-6">Register as patient</div>
@@ -739,7 +749,7 @@ const plasmarequest = () => {
           <p className="border-l border-blue-500 pl-3 mb-8">{item}</p>
         ))}
       </div>
-    </div>
+    </Fragment>
   );
 };
 

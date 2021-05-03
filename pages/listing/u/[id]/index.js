@@ -93,14 +93,6 @@ const index = () => {
           </span>
         </div>
       </div>
-      <div className="max-w-6xl mx-auto px-4">
-        <button className="md:mr-6 md:mb-0 mb-6 py-4 px-6 w-52 bg-yellow-400 rounded  font-bold hover:bg-yellow-300 transition duration-100 shadow-md">
-          Offer Help {">>>>"}
-        </button>
-        <button className="py-4 px-6 w-52 bg-black rounded  font-bold hover:bg-gray-700 transition duration-100 text-white shadow-md">
-          Share {">>>>"}
-        </button>
-      </div>
       <div className="my-12 max-w-6xl mx-auto px-4">
         {[
           "It is a great thing that you wish to help people in this difficult time.",

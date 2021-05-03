@@ -5,7 +5,7 @@ import Head from "next/head";
 import axios from "axios";
 import Pagination from "../../components/Pagination";
 
-const MAX_ITEM_PER_PAGE = 2;
+const MAX_ITEM_PER_PAGE = 50;
 
 const listing = () => {
   const router = useRouter();
@@ -47,7 +47,7 @@ const listing = () => {
       setTotalPage(Math.ceil(plasma_req_count / MAX_ITEM_PER_PAGE));
       const get_data_path = `/api/plasmarequired${
         search ? `/search?${search}=${query}&` : "?"
-      }${blood ? `blood=${encodeURIComponent(blood)}&` : null}skip=${
+      }${blood ? `blood=${encodeURIComponent(blood)}&` : ""}skip=${
         (parseInt(page) - 1) * MAX_ITEM_PER_PAGE
       }&limit=${MAX_ITEM_PER_PAGE}`;
       console.log("search data", get_data_path);

@@ -19,11 +19,13 @@ export default function Home() {
         <div className="flex">
           <div className="md:w-1/2">
             <Link href="/listing">
-              <div className="mb-12 ">
-                <p className="mb-2 font-bold">View plasma request list</p>
-                <p className="mb-2">For Donors</p>
+              <div className="mb-12">
+                <p className="mb-2 font-bold cursor-default">
+                  View plasma request list
+                </p>
+                <p className="mb-2 cursor-default">For Donors</p>
                 <p className=" text-blue-600">
-                  <a>
+                  <a href="#">
                     <u>Donate Plasma</u> {">>>"}
                   </a>
                 </p>
@@ -31,8 +33,10 @@ export default function Home() {
             </Link>
             <Link href="/plasmarequest">
               <div className="mb-20">
-                <p className="mb-2 font-bold">Fill up plasma request form</p>
-                <p className="mb-2">For Patients</p>
+                <p className="mb-2 font-bold cursor-default">
+                  Fill up plasma request form
+                </p>
+                <p className="mb-2 cursor-default">For Patients</p>
                 <p className="text-blue-600">
                   <a href="#">
                     <u>Make request for plasma</u> {">>>"}

@@ -143,26 +143,38 @@ const handler = async (req, res) => {
           const identifier = `${name.first.toLowerCase()}${
             date.getUTCMonth() + 1
           }${date.getUTCDate()}${date.getUTCHours()}${date.getUTCMinutes()}${date.getUTCMilliseconds()}`;
-          const new_plasma_request = await PlasmaReq.create({
-            name: `${name.first} ${name.last}`,
-            email,
-            phone,
-            age,
-            phoneAlt,
-            bloodGroup,
-            bloodGroupNeeded,
-            isInHospital,
-            hospital: isInHospital ? hospital : "",
-            identifier,
-            uid,
-            address: {
-              locality: address.locality,
-              city: address.city,
-              pin: address.pin,
-              state: address.state,
-            },
-          }); /* create a new model in the database */
-          res.status(201).json({ success: true, id: new_plasma_request.uid });
+          const user = await PlasmaReq.find({ phone });
+          if (user.length > 0) {
+            res.status(400).json({
+              success: false,
+              message: "Phone number already in use",
+              code: "plasmarequest/phone-number-reused",
+              identifier: user[0].identifier,
+            });
+          } else {
+            const new_plasma_request = await PlasmaReq.create({
+              name: `${name.first} ${name.last}`,
+              email,
+              phone,
+              age,
+              phoneAlt,
+              bloodGroup,
+              bloodGroupNeeded,
+              isInHospital,
+              hospital: isInHospital ? hospital : "",
+              identifier,
+              uid,
+              address: {
+                locality: address.locality,
+                city: address.city,
+                pin: address.pin,
+                state: address.state,
+              },
+            }); /* create a new model in the database */
+            res
+              .status(201)
+              .json({ success: true, identifier: new_plasma_request.identifier });
+          }
         } catch (error) {
           console.log(error);
           res.status(400).json({ success: false });

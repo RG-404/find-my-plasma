@@ -1,6 +1,7 @@
 import { useEffect, useState, Fragment } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import Link from "next/link";
 import firebase from "firebase/app";
 import "firebase/auth";
 import initFirebase from "../utils/firebase";
@@ -36,6 +37,7 @@ const plasmarequest = () => {
   const [hospital, setHospital] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [submitWarning, setsubmitWarning] = useState("");
+  const [visitLink, setVisitLink] = useState("");
 
   const [fieldMessages, setFieldMessages] = useState({
     firstName: "",
@@ -181,6 +183,7 @@ const plasmarequest = () => {
         data
       );
       if (response_plasmarequired.data.success) {
+        setVisitLink(`/listing/u/${response_plasmarequired.data.identifier}`);
         setToastMessage({
           text: "PLASMA REQUEST CREATED SUCCESSFULLY",
           warn: false,
@@ -196,7 +199,15 @@ const plasmarequest = () => {
       setButtonLoading(false);
     } catch (error) {
       setButtonLoading(false);
-
+      if (error.response) {
+        if (error.response.data.code === "plasmarequest/phone-number-reused")
+          setFormSubmitted(true);
+        setToastMessage({
+          text: "PLASMA REQUEST ALREADY EXISTS FOR THIS PHONE NUMBER",
+          warn: true,
+        });
+        setVisitLink(`/listing/u/${error.response.data.identifier}`);
+      }
       setShowPhoneVerificationBlock(false);
       if (error.code === "auth/invalid-verification-code") {
         console.log(error.message);
@@ -251,6 +262,15 @@ const plasmarequest = () => {
           warn={toastMessage.warn}
         />
       </div>
+      {visitLink ? (
+        <div className="max-w-6xl mx-auto md:px-4 px-7">
+          <Link href={visitLink}>
+            <a href="#" className="text-blue-500 underline">
+              Click to visit plasma request profile
+            </a>
+          </Link>
+        </div>
+      ) : null}
       {!formSubmitted ? (
         <div className="pt-14 max-w-6xl mx-auto md:px-4 px-7">
           <div className="md:flex">
@@ -736,7 +756,10 @@ const plasmarequest = () => {
                   showOTPfieldBlock && !buttonLoading ? null : "hidden"
                 }`}
               >
-                <label className="font-bold mb-2">OTP</label>
+                <div className="mb-2">
+                  OTP has been sent to +91{phoneNumber}
+                </div>
+                <label className="font-bold mb-2">Enter OTP</label>
                 <input
                   className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
                   name="one-time-code"

@@ -34,6 +34,8 @@ const plasmarequest = () => {
   const [OTP, setOTP] = useState("");
   const [isInHospital, setIsInHospital] = useState(false);
   const [hospital, setHospital] = useState("");
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [submitWarning, setsubmitWarning] = useState("");
 
   const [fieldMessages, setFieldMessages] = useState({
     firstName: "",
@@ -140,6 +142,9 @@ const plasmarequest = () => {
         setShowPhoneVerificationBlock(false);
         if (error.code === "auth/too-many-requests") {
           console.log(error.message);
+          setsubmitWarning(
+            "Your device has been temporarily block for suspecious activity. Please try again later."
+          );
         }
       }
     }
@@ -187,7 +192,7 @@ const plasmarequest = () => {
         });
       }
       router.push("#form");
-
+      setFormSubmitted(true);
       setButtonLoading(false);
     } catch (error) {
       setButtonLoading(false);
@@ -195,7 +200,13 @@ const plasmarequest = () => {
       setShowPhoneVerificationBlock(false);
       if (error.code === "auth/invalid-verification-code") {
         console.log(error.message);
+        setsubmitWarning("Wrong OTP entered. Try again.");
       } else if (error.code === "auth/too-many-requests") {
+        console.log(error.message);
+        setsubmitWarning(error.message);
+        setsubmitWarning(
+          "Your device has been temporarily block for suspecious activity. Please try again later."
+        );
         console.log(error.message);
       }
     }
@@ -239,509 +250,522 @@ const plasmarequest = () => {
           message={toastMessage.text}
           warn={toastMessage.warn}
         />
-        <div className="md:flex">
-          <div className="flex flex-col md:mr-20 mb-12 md:mb-0">
-            <label className="font-bold mb-2">First Name</label>
-            <input
-              className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
-              name="given-name"
-              value={firstName}
-              onChange={(e) => {
-                handleInput(e, setFirstName);
-              }}
-              onBlur={(e) => {
-                if (!e.target.value) {
-                  setFieldMessages({
-                    ...fieldMessages,
-                    firstName: "First name cannot be empty",
-                  });
-                } else {
-                  setFieldMessages({
-                    ...fieldMessages,
-                    firstName: "",
-                  });
-                }
-              }}
-            />
-            {fieldMessages.firstName ? (
-              <div className="mt-2 text-red-600">{fieldMessages.firstName}</div>
-            ) : null}
-          </div>
-          <div className="flex flex-col">
-            <label className="font-bold mb-2">Last Name</label>
-            <input
-              className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
-              name="family-name"
-              value={lastName}
-              onChange={(e) => {
-                handleInput(e, setLastName);
-              }}
-              onBlur={(e) => {
-                if (!e.target.value) {
-                  setFieldMessages({
-                    ...fieldMessages,
-                    lastName: "Last name cannot be empty",
-                  });
-                } else {
-                  setFieldMessages({
-                    ...fieldMessages,
-                    lastName: "",
-                  });
-                }
-              }}
-            />
-            {fieldMessages.lastName ? (
-              <div className="mt-2 text-red-600">{fieldMessages.lastName}</div>
-            ) : null}
-          </div>
-        </div>
-        <div className="flex flex-col mt-10">
-          <label className="font-bold mb-2">Phone number</label>
-          <div className="border border-blue-600 rounded max-w-6xl md:w-96 flex items-center">
-            <div className="px-2">+91</div>
-            <input
-              className="w-full px-3 py-2 bg-transparent"
-              name="tel"
-              type="number"
-              value={phoneNumber}
-              onChange={(e) => {
-                handleInput(e, setPhoneNumber);
-              }}
-              onBlur={(e) => {
-                if (e.target.value.length != 10) {
-                  setFieldMessages({
-                    ...fieldMessages,
-                    phoneNumber: "Please enter a valid phone number",
-                  });
-                } else {
-                  setFieldMessages({
-                    ...fieldMessages,
-                    phoneNumber: "",
-                  });
-                }
-              }}
-            />
-          </div>
-          {fieldMessages.phoneNumber ? (
-            <div className="mt-2 text-red-600">{fieldMessages.phoneNumber}</div>
-          ) : null}
-        </div>
-        <div className="flex flex-col mt-10">
-          <label className="font-bold mb-2">
-            Alternate Phone number (optional)
-          </label>
-          <div className="border border-blue-600 rounded max-w-6xl md:w-96 flex items-center">
-            <div className="px-2">+91</div>
-            <input
-              className="w-full px-3 py-2 bg-transparent"
-              name="tel-alt"
-              value={phoneNumberAlt}
-              onChange={(e) => {
-                handleInput(e, setPhoneNumberAlt);
-              }}
-              onBlur={(e) => {
-                if (!e.target.value) {
-                  setFieldMessages({
-                    ...fieldMessages,
-                    phoneNumberAlt: "",
-                  });
-                } else if (e.target.value.length != 10) {
-                  setFieldMessages({
-                    ...fieldMessages,
-                    phoneNumberAlt: "Please enter a valid phone number",
-                  });
-                } else {
-                  setFieldMessages({
-                    ...fieldMessages,
-                    phoneNumberAlt: "",
-                  });
-                }
-              }}
-            />
-          </div>
-          {fieldMessages.phoneNumberAlt ? (
-            <div className="mt-2 text-red-600">
-              {fieldMessages.phoneNumberAlt}
-            </div>
-          ) : null}
-        </div>
-        <div className="flex flex-col mt-10">
-          <label className="font-bold mb-2">Email address (optional )</label>
-          <input
-            className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
-            name="email"
-            value={emailAddress}
-            onChange={(e) => {
-              handleInput(e, setEmailAddress);
-            }}
-            onBlur={(e) => {
-              if (!e.target.value) {
-                setFieldMessages({
-                  ...fieldMessages,
-                  emailAddress: "",
-                });
-              } else if (!isEmail(e.target.value)) {
-                setFieldMessages({
-                  ...fieldMessages,
-                  emailAddress: "Please enter a valid email address",
-                });
-              } else {
-                setFieldMessages({
-                  ...fieldMessages,
-                  emailAddress: "",
-                });
-              }
-            }}
-          />
-          {fieldMessages.emailAddress ? (
-            <div className="mt-2 text-red-600">
-              {fieldMessages.emailAddress}
-            </div>
-          ) : null}
-        </div>
-        <div className="flex flex-col mt-10">
-          <label className="font-bold mb-2">Age</label>
-          <input
-            className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
-            name="age"
-            type="number"
-            value={age}
-            onChange={(e) => {
-              handleInput(e, setAge);
-            }}
-            onBlur={(e) => {
-              if (parseInt(e.target.value) < 0 || !e.target.value) {
-                setFieldMessages({
-                  ...fieldMessages,
-                  age: "Please enter a valid age",
-                });
-              } else {
-                setFieldMessages({
-                  ...fieldMessages,
-                  age: "",
-                });
-              }
-            }}
-          />
-          {fieldMessages.age ? (
-            <div className="mt-2 text-red-600">{fieldMessages.age}</div>
-          ) : null}
-        </div>
-        <div className="flex flex-col mt-10">
-          <label className="font-bold mb-2">Your Blood Group</label>
-          <select
-            className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
-            name="blood-group"
-            value={bloodGroup}
-            onChange={(e) => {
-              handleInput(e, setBloodGroup);
-            }}
-          >
-            <option value="default" hidden defaultValue>
-              &nbsp;
-            </option>
-            <option value="A+">A RhD positive (A+)</option>
-            <option value="A-">A RhD negative (A-)</option>
-            <option value="B+">A RhD negative (B+)</option>
-            <option value="B-">B RhD positive (B-)</option>
-            <option value="O+">B RhD negative (O+)</option>
-            <option value="O-">O RhD positive (O-)</option>
-            <option value="AB+">O RhD negative (AB+)</option>
-            <option value="AB-">AB RhD positive (AB-)</option>
-          </select>
-        </div>
-        <div className="flex flex-col mt-10">
-          <label className="font-bold mb-2">Acceptable Blood Groups</label>
-          <span className="flex items-center mt-3">
-            <input
-              type="checkbox"
-              className="mr-2"
-              checked={checkAp}
-              onChange={(e) => {
-                handleInput(e, setCheckAp);
-              }}
-            />
-            <div>A RhD positive (A+)</div>
-          </span>
-          <span className="flex items-center mt-3">
-            <input
-              type="checkbox"
-              className="mr-2"
-              checked={checkAn}
-              onChange={(e) => {
-                handleInput(e, setCheckAn);
-              }}
-            />
-            <div>A RhD negative (A-)</div>
-          </span>
-          <span className="flex items-center mt-3">
-            <input
-              type="checkbox"
-              className="mr-2"
-              checked={checkBp}
-              onChange={(e) => {
-                handleInput(e, setCheckBp);
-              }}
-            />
-            <div>B RhD positive (B+)</div>
-          </span>
-          <span className="flex items-center mt-3">
-            <input
-              type="checkbox"
-              className="mr-2"
-              checked={checkBn}
-              onChange={(e) => {
-                handleInput(e, setCheckBn);
-              }}
-            />
-            <div>B RhD negative (B-)</div>
-          </span>
-          <span className="flex items-center mt-3">
-            <input
-              type="checkbox"
-              className="mr-2"
-              checked={checkOp}
-              onChange={(e) => {
-                handleInput(e, setCheckOp);
-              }}
-            />
-            <div>O RhD positive (O+)</div>
-          </span>
-          <span className="flex items-center mt-3">
-            <input
-              type="checkbox"
-              className="mr-2"
-              checked={checkOn}
-              onChange={(e) => {
-                handleInput(e, setCheckOn);
-              }}
-            />
-            <div>O RhD negative (O-)</div>
-          </span>
-          <span className="flex items-center mt-3">
-            <input
-              type="checkbox"
-              className="mr-2"
-              checked={checkABp}
-              onChange={(e) => {
-                handleInput(e, setCheckABp);
-              }}
-            />
-            <div>AB RhD positive (AB+)</div>
-          </span>
-          <span className="flex items-center mt-3">
-            <input
-              type="checkbox"
-              className="mr-2"
-              checked={checkABn}
-              onChange={(e) => {
-                handleInput(e, setCheckABn);
-              }}
-            />
-            <div>AB RhD negative (AB-)</div>
-          </span>
-        </div>
-        <div className="flex flex-col mt-10">
-          <label className="font-bold mb-2">Hospital</label>
-          <div className="flex items-start md:items-center py-2">
-            <div className="pr-1 pt-1 md:pr-0 md:pt-0 flex items-start md:items-center">
-              <input
-                type="checkbox"
-                className="mr-2 form-checkbox"
-                checked={isInHospital}
-                onChange={(e) => {
-                  handleInput(e, setIsInHospital);
-                }}
-              />
-            </div>
-            <div>The patient is currently admitted in a hospital</div>
-          </div>
-          {isInHospital ? (
-            <div className="flex flex-col mt-10">
-              <label className="font-bold mb-2">Hospital</label>
+      </div>
+      {!formSubmitted ? (
+        <div className="pt-14 max-w-6xl mx-auto md:px-4 px-7">
+          <div className="md:flex">
+            <div className="flex flex-col md:mr-20 mb-12 md:mb-0">
+              <label className="font-bold mb-2">First Name</label>
               <input
                 className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
-                name="hospital"
-                value={hospital}
+                name="given-name"
+                value={firstName}
                 onChange={(e) => {
-                  handleInput(e, setHospital);
+                  handleInput(e, setFirstName);
                 }}
                 onBlur={(e) => {
-                  if (!e.target.value.length && isInHospital) {
+                  if (!e.target.value) {
                     setFieldMessages({
                       ...fieldMessages,
-                      hospital: "Please enter the name of the hospital",
+                      firstName: "First name cannot be empty",
                     });
                   } else {
                     setFieldMessages({
                       ...fieldMessages,
-                      hospital: "",
+                      firstName: "",
                     });
                   }
                 }}
               />
-              {fieldMessages.hospital ? (
+              {fieldMessages.firstName ? (
                 <div className="mt-2 text-red-600">
-                  {fieldMessages.hospital}
+                  {fieldMessages.firstName}
                 </div>
               ) : null}
             </div>
-          ) : null}
-        </div>
-        <div className="flex flex-col mt-10">
-          <label className="font-bold mb-2">Locality (optional)</label>
-          <input
-            className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
-            name="locality"
-            value={locality}
-            onChange={(e) => {
-              handleInput(e, setLocality);
-            }}
-          />
-        </div>
-        <div className="md:flex mt-10">
-          <div className="flex flex-col md:mr-20 mb-12 md:mb-0">
-            <label className="font-bold mb-2">City</label>
+            <div className="flex flex-col">
+              <label className="font-bold mb-2">Last Name</label>
+              <input
+                className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
+                name="family-name"
+                value={lastName}
+                onChange={(e) => {
+                  handleInput(e, setLastName);
+                }}
+                onBlur={(e) => {
+                  if (!e.target.value) {
+                    setFieldMessages({
+                      ...fieldMessages,
+                      lastName: "Last name cannot be empty",
+                    });
+                  } else {
+                    setFieldMessages({
+                      ...fieldMessages,
+                      lastName: "",
+                    });
+                  }
+                }}
+              />
+              {fieldMessages.lastName ? (
+                <div className="mt-2 text-red-600">
+                  {fieldMessages.lastName}
+                </div>
+              ) : null}
+            </div>
+          </div>
+          <div className="flex flex-col mt-10">
+            <label className="font-bold mb-2">Phone number</label>
+            <div className="border border-blue-600 rounded max-w-6xl md:w-96 flex items-center">
+              <div className="px-2">+91</div>
+              <input
+                className="w-full px-3 py-2 bg-transparent"
+                name="tel"
+                type="number"
+                value={phoneNumber}
+                onChange={(e) => {
+                  handleInput(e, setPhoneNumber);
+                }}
+                onBlur={(e) => {
+                  if (e.target.value.length != 10) {
+                    setFieldMessages({
+                      ...fieldMessages,
+                      phoneNumber: "Please enter a valid phone number",
+                    });
+                  } else {
+                    setFieldMessages({
+                      ...fieldMessages,
+                      phoneNumber: "",
+                    });
+                  }
+                }}
+              />
+            </div>
+            {fieldMessages.phoneNumber ? (
+              <div className="mt-2 text-red-600">
+                {fieldMessages.phoneNumber}
+              </div>
+            ) : null}
+          </div>
+          <div className="flex flex-col mt-10">
+            <label className="font-bold mb-2">
+              Alternate Phone number (optional)
+            </label>
+            <div className="border border-blue-600 rounded max-w-6xl md:w-96 flex items-center">
+              <div className="px-2">+91</div>
+              <input
+                className="w-full px-3 py-2 bg-transparent"
+                name="tel-alt"
+                value={phoneNumberAlt}
+                onChange={(e) => {
+                  handleInput(e, setPhoneNumberAlt);
+                }}
+                onBlur={(e) => {
+                  if (!e.target.value) {
+                    setFieldMessages({
+                      ...fieldMessages,
+                      phoneNumberAlt: "",
+                    });
+                  } else if (e.target.value.length != 10) {
+                    setFieldMessages({
+                      ...fieldMessages,
+                      phoneNumberAlt: "Please enter a valid phone number",
+                    });
+                  } else {
+                    setFieldMessages({
+                      ...fieldMessages,
+                      phoneNumberAlt: "",
+                    });
+                  }
+                }}
+              />
+            </div>
+            {fieldMessages.phoneNumberAlt ? (
+              <div className="mt-2 text-red-600">
+                {fieldMessages.phoneNumberAlt}
+              </div>
+            ) : null}
+          </div>
+          <div className="flex flex-col mt-10">
+            <label className="font-bold mb-2">Email address (optional )</label>
             <input
               className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
-              name="city"
-              value={city}
+              name="email"
+              value={emailAddress}
               onChange={(e) => {
-                handleInput(e, setCity);
+                handleInput(e, setEmailAddress);
+              }}
+              onBlur={(e) => {
+                if (!e.target.value) {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    emailAddress: "",
+                  });
+                } else if (!isEmail(e.target.value)) {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    emailAddress: "Please enter a valid email address",
+                  });
+                } else {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    emailAddress: "",
+                  });
+                }
+              }}
+            />
+            {fieldMessages.emailAddress ? (
+              <div className="mt-2 text-red-600">
+                {fieldMessages.emailAddress}
+              </div>
+            ) : null}
+          </div>
+          <div className="flex flex-col mt-10">
+            <label className="font-bold mb-2">Age</label>
+            <input
+              className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
+              name="age"
+              type="number"
+              value={age}
+              onChange={(e) => {
+                handleInput(e, setAge);
+              }}
+              onBlur={(e) => {
+                if (parseInt(e.target.value) < 0 || !e.target.value) {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    age: "Please enter a valid age",
+                  });
+                } else {
+                  setFieldMessages({
+                    ...fieldMessages,
+                    age: "",
+                  });
+                }
+              }}
+            />
+            {fieldMessages.age ? (
+              <div className="mt-2 text-red-600">{fieldMessages.age}</div>
+            ) : null}
+          </div>
+          <div className="flex flex-col mt-10">
+            <label className="font-bold mb-2">Your Blood Group</label>
+            <select
+              className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
+              name="blood-group"
+              value={bloodGroup}
+              onChange={(e) => {
+                handleInput(e, setBloodGroup);
+              }}
+            >
+              <option value="default" hidden defaultValue>
+                &nbsp;
+              </option>
+              <option value="A+">A RhD positive (A+)</option>
+              <option value="A-">A RhD negative (A-)</option>
+              <option value="B+">A RhD negative (B+)</option>
+              <option value="B-">B RhD positive (B-)</option>
+              <option value="O+">B RhD negative (O+)</option>
+              <option value="O-">O RhD positive (O-)</option>
+              <option value="AB+">O RhD negative (AB+)</option>
+              <option value="AB-">AB RhD positive (AB-)</option>
+            </select>
+          </div>
+          <div className="flex flex-col mt-10">
+            <label className="font-bold mb-2">Acceptable Blood Groups</label>
+            <span className="flex items-center mt-3">
+              <input
+                type="checkbox"
+                className="mr-2"
+                checked={checkAp}
+                onChange={(e) => {
+                  handleInput(e, setCheckAp);
+                }}
+              />
+              <div>A RhD positive (A+)</div>
+            </span>
+            <span className="flex items-center mt-3">
+              <input
+                type="checkbox"
+                className="mr-2"
+                checked={checkAn}
+                onChange={(e) => {
+                  handleInput(e, setCheckAn);
+                }}
+              />
+              <div>A RhD negative (A-)</div>
+            </span>
+            <span className="flex items-center mt-3">
+              <input
+                type="checkbox"
+                className="mr-2"
+                checked={checkBp}
+                onChange={(e) => {
+                  handleInput(e, setCheckBp);
+                }}
+              />
+              <div>B RhD positive (B+)</div>
+            </span>
+            <span className="flex items-center mt-3">
+              <input
+                type="checkbox"
+                className="mr-2"
+                checked={checkBn}
+                onChange={(e) => {
+                  handleInput(e, setCheckBn);
+                }}
+              />
+              <div>B RhD negative (B-)</div>
+            </span>
+            <span className="flex items-center mt-3">
+              <input
+                type="checkbox"
+                className="mr-2"
+                checked={checkOp}
+                onChange={(e) => {
+                  handleInput(e, setCheckOp);
+                }}
+              />
+              <div>O RhD positive (O+)</div>
+            </span>
+            <span className="flex items-center mt-3">
+              <input
+                type="checkbox"
+                className="mr-2"
+                checked={checkOn}
+                onChange={(e) => {
+                  handleInput(e, setCheckOn);
+                }}
+              />
+              <div>O RhD negative (O-)</div>
+            </span>
+            <span className="flex items-center mt-3">
+              <input
+                type="checkbox"
+                className="mr-2"
+                checked={checkABp}
+                onChange={(e) => {
+                  handleInput(e, setCheckABp);
+                }}
+              />
+              <div>AB RhD positive (AB+)</div>
+            </span>
+            <span className="flex items-center mt-3">
+              <input
+                type="checkbox"
+                className="mr-2"
+                checked={checkABn}
+                onChange={(e) => {
+                  handleInput(e, setCheckABn);
+                }}
+              />
+              <div>AB RhD negative (AB-)</div>
+            </span>
+          </div>
+          <div className="flex flex-col mt-10">
+            <label className="font-bold mb-2">Hospital</label>
+            <div className="flex items-start md:items-center py-2">
+              <div className="pr-1 pt-1 md:pr-0 md:pt-0 flex items-start md:items-center">
+                <input
+                  type="checkbox"
+                  className="mr-2 form-checkbox"
+                  checked={isInHospital}
+                  onChange={(e) => {
+                    handleInput(e, setIsInHospital);
+                  }}
+                />
+              </div>
+              <div>The patient is currently admitted in a hospital</div>
+            </div>
+            {isInHospital ? (
+              <div className="flex flex-col mt-10">
+                <label className="font-bold mb-2">Hospital</label>
+                <input
+                  className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
+                  name="hospital"
+                  value={hospital}
+                  onChange={(e) => {
+                    handleInput(e, setHospital);
+                  }}
+                  onBlur={(e) => {
+                    if (!e.target.value.length && isInHospital) {
+                      setFieldMessages({
+                        ...fieldMessages,
+                        hospital: "Please enter the name of the hospital",
+                      });
+                    } else {
+                      setFieldMessages({
+                        ...fieldMessages,
+                        hospital: "",
+                      });
+                    }
+                  }}
+                />
+                {fieldMessages.hospital ? (
+                  <div className="mt-2 text-red-600">
+                    {fieldMessages.hospital}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+          <div className="flex flex-col mt-10">
+            <label className="font-bold mb-2">Locality (optional)</label>
+            <input
+              className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
+              name="locality"
+              value={locality}
+              onChange={(e) => {
+                handleInput(e, setLocality);
+              }}
+            />
+          </div>
+          <div className="md:flex mt-10">
+            <div className="flex flex-col md:mr-20 mb-12 md:mb-0">
+              <label className="font-bold mb-2">City</label>
+              <input
+                className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
+                name="city"
+                value={city}
+                onChange={(e) => {
+                  handleInput(e, setCity);
+                }}
+                onBlur={(e) => {
+                  if (!e.target.value.length) {
+                    setFieldMessages({
+                      ...fieldMessages,
+                      city: "Please enter a city",
+                    });
+                  } else {
+                    setFieldMessages({
+                      ...fieldMessages,
+                      city: "",
+                    });
+                  }
+                }}
+              />
+              {fieldMessages.city ? (
+                <div className="mt-2 text-red-600">{fieldMessages.city}</div>
+              ) : null}
+            </div>
+            <div className="flex flex-col">
+              <label className="font-bold mb-2">Area Pincode</label>
+              <input
+                className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
+                name="postal-code"
+                type="number"
+                value={areaPincode}
+                onChange={(e) => {
+                  handleInput(e, setAreaPincode);
+                }}
+                onBlur={(e) => {
+                  if (e.target.value.length != 6) {
+                    setFieldMessages({
+                      ...fieldMessages,
+                      areaPincode: "Please enter a valid pin code",
+                    });
+                  } else {
+                    setFieldMessages({
+                      ...fieldMessages,
+                      areaPincode: "",
+                    });
+                  }
+                }}
+              />
+              {fieldMessages.areaPincode ? (
+                <div className="mt-2 text-red-600">
+                  {fieldMessages.areaPincode}
+                </div>
+              ) : null}
+            </div>
+          </div>
+          <div className="flex flex-col mt-10">
+            <label className="font-bold mb-2">State</label>
+            <input
+              className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
+              name="state"
+              value={stateName}
+              onChange={(e) => {
+                handleInput(e, setStateName);
               }}
               onBlur={(e) => {
                 if (!e.target.value.length) {
                   setFieldMessages({
                     ...fieldMessages,
-                    city: "Please enter a city",
+                    stateName: "Please enter a state",
                   });
                 } else {
                   setFieldMessages({
                     ...fieldMessages,
-                    city: "",
+                    stateName: "",
                   });
                 }
               }}
             />
-            {fieldMessages.city ? (
-              <div className="mt-2 text-red-600">{fieldMessages.city}</div>
+            {fieldMessages.stateName ? (
+              <div className="mt-2 text-red-600">{fieldMessages.stateName}</div>
             ) : null}
           </div>
-          <div className="flex flex-col">
-            <label className="font-bold mb-2">Area Pincode</label>
-            <input
-              className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
-              name="postal-code"
-              type="number"
-              value={areaPincode}
-              onChange={(e) => {
-                handleInput(e, setAreaPincode);
-              }}
-              onBlur={(e) => {
-                if (e.target.value.length != 6) {
-                  setFieldMessages({
-                    ...fieldMessages,
-                    areaPincode: "Please enter a valid pin code",
-                  });
-                } else {
-                  setFieldMessages({
-                    ...fieldMessages,
-                    areaPincode: "",
-                  });
-                }
-              }}
-            />
-            {fieldMessages.areaPincode ? (
-              <div className="mt-2 text-red-600">
-                {fieldMessages.areaPincode}
+          <div className="flex flex-col mt-10">
+            <span className="flex items-start md:items-center mt-3">
+              <div className="pr-1 pt-1 md:pr-0 md:pt-0 flex items-start md:items-center">
+                <input
+                  type="checkbox"
+                  className="mr-2 form-checkbox"
+                  checked={checkConsent}
+                  onChange={(e) => {
+                    handleInput(e, setCheckConsent);
+                  }}
+                />
               </div>
-            ) : null}
-          </div>
-        </div>
-        <div className="flex flex-col mt-10">
-          <label className="font-bold mb-2">State</label>
-          <input
-            className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
-            name="state"
-            value={stateName}
-            onChange={(e) => {
-              handleInput(e, setStateName);
-            }}
-            onBlur={(e) => {
-              if (!e.target.value.length) {
-                setFieldMessages({
-                  ...fieldMessages,
-                  stateName: "Please enter a state",
-                });
-              } else {
-                setFieldMessages({
-                  ...fieldMessages,
-                  stateName: "",
-                });
-              }
-            }}
-          />
-          {fieldMessages.stateName ? (
-            <div className="mt-2 text-red-600">{fieldMessages.stateName}</div>
-          ) : null}
-        </div>
-        <div className="flex flex-col mt-10">
-          <span className="flex items-start md:items-center mt-3">
-            <div className="pr-1 pt-1 md:pr-0 md:pt-0 flex items-start md:items-center">
-              <input
-                type="checkbox"
-                className="mr-2 form-checkbox"
-                checked={checkConsent}
-                onChange={(e) => {
-                  handleInput(e, setCheckConsent);
-                }}
-              />
-            </div>
-            <div>
-              Allow the following information to be available to the public
-              domain
-            </div>
-          </span>
-          <div className="mt-10">
-            {buttonLoading ? <div>{submitMessage}</div> : null}
-            <div
-              className={`mb-10 ${
-                showPhoneVerificationBlock ? null : "hidden"
-              }`}
-            >
-              <div id="recaptcha"></div>
-            </div>
-            <div
-              className={`flex flex-col mb-10 ${
-                showOTPfieldBlock && !buttonLoading ? null : "hidden"
-              }`}
-            >
-              <label className="font-bold mb-2">OTP</label>
-              <input
-                className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
-                name="one-time-code"
-                value={OTP}
-                onChange={(e) => {
-                  handleInput(e, setOTP);
-                }}
-              />
-            </div>
-            {buttonLoading ? null : (
-              <button
-                onClick={!showOTPfieldBlock ? handleSubmit : handleFinalSubmit}
-                className={`py-4 px-6 w-52 bg-blue-500 rounded  font-bold ${
-                  checkConsent && validateForm()
-                    ? "hover:bg-yellow-300 transition duration-100"
-                    : "opacity-50  cursor-not-allowed"
-                } `}
-                disabled={checkConsent && validateForm() ? false : true}
+              <div>
+                Allow the following information to be available to the public
+                domain
+              </div>
+            </span>
+            <div className="mt-10">
+              {buttonLoading ? <div>{submitMessage}</div> : null}
+              <div
+                className={`mb-10 ${
+                  showPhoneVerificationBlock ? null : "hidden"
+                }`}
               >
-                {!showOTPfieldBlock ? "Get OTP >>>>" : "Submit >>>>"}
-              </button>
-            )}
+                <div id="recaptcha"></div>
+              </div>
+              <div
+                className={`flex flex-col mb-10 ${
+                  showOTPfieldBlock && !buttonLoading ? null : "hidden"
+                }`}
+              >
+                <label className="font-bold mb-2">OTP</label>
+                <input
+                  className="border border-blue-600 px-3 py-2 rounded max-w-6xl md:w-96"
+                  name="one-time-code"
+                  value={OTP}
+                  onChange={(e) => {
+                    handleInput(e, setOTP);
+                  }}
+                />
+              </div>
+              {submitWarning ? <div>{submitWarning}</div> : null}
+              {buttonLoading ? null : (
+                <button
+                  onClick={
+                    !showOTPfieldBlock ? handleSubmit : handleFinalSubmit
+                  }
+                  className={`py-4 px-6 w-52 bg-blue-500 rounded  font-bold ${
+                    checkConsent && validateForm()
+                      ? "hover:bg-yellow-300 transition duration-100"
+                      : "opacity-50  cursor-not-allowed"
+                  } `}
+                  disabled={checkConsent && validateForm() ? false : true}
+                >
+                  {!showOTPfieldBlock ? "Get OTP >>>>" : "Submit >>>>"}
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
       <div className="my-12 max-w-6xl mx-auto md:px-4 px-7 text-gray-600">
         {[
           "The information displayed in the website will solely depend on the \

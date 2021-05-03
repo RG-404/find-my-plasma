@@ -2,6 +2,10 @@ import "../styles/globals.css";
 import Layout from "../components/Layout";
 import { Fragment } from "react";
 import Head from "next/head";
+import firebase from "firebase/app";
+import "firebase/analytics";
+
+firebase.analytics();
 
 function MyApp({ Component, pageProps }) {
   return (

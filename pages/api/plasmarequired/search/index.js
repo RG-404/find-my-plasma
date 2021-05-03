@@ -82,9 +82,9 @@ const handler = async (req, res) => {
               ? `${createdAt_Date.getDate()}`
               : `0${createdAt_Date.getDate()}`;
           const month =
-            createdAt_Date.getMonth() - 1 > 9
-              ? `${createdAt_Date.getMonth() - 1}`
-              : `0${createdAt_Date.getMonth() - 1}`;
+            createdAt_Date.getMonth() + 1 > 9
+              ? `${createdAt_Date.getMonth() + 1}`
+              : `0${createdAt_Date.getMonth() + 1}`;
           const year = `${createdAt_Date.getFullYear()}`;
           results_res_array.push({
             name: item.name,
